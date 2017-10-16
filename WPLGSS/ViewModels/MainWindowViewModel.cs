@@ -6,7 +6,7 @@ namespace WPLGSS.ViewModels
     [Export]
     public class MainWindowViewModel : BindableBase
     {
-        private string _title = "Prism MEF Application";
+        private string _title = "WPL Ground Support System";
         public string Title
         {
             get { return _title; }
