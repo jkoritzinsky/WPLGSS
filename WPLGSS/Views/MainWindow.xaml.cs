@@ -8,7 +8,7 @@ namespace WPLGSS.Views
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     [Export]
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         public MainWindow()
         {

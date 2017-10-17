@@ -9,9 +9,8 @@
       <Setter Property="Header" Value="{Binding DataContext.Name}" />
     </Style>
   </Window.Resources>
-    <Grid>
-      <TabControl prism:RegionManager.RegionName="{x:Static local:RegionNames.ContentRegion}"
-                  ItemContainerStyle="{StaticResource TabItemRegionStyle}"
-                  SelectedIndex="0" />
-    </Grid>
+  <Grid>
+    <TabControl prism:RegionManager.RegionName="{x:Static local:RegionNames.ContentRegion}"
+                ItemContainerStyle="{StaticResource TabItemRegionStyle}" />
+  </Grid>
 </Window>

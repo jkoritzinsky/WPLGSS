@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="WPLGSS.Views.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WPLGSS.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition />
+      <ColumnDefinition />
+    </Grid.ColumnDefinitions>
+    <Button Content="Sequence Manager" Background="Yellow"
+            Command="{Binding NavigateToViewCommand}" CommandParameter="SequenceManagerView" />
+    <Button Grid.Column="1" Content="Configuration" Background="Azure"
+            Command="{Binding NavigateToViewCommand}" CommandParameter="ConfigView" />
+    <Button Grid.Row="1" Grid.ColumnSpan="2" Content="Live View" Background="LightGreen"
+            Command="{Binding NavigateToViewCommand}" CommandParameter="LiveView" />
+  </Grid>
+</UserControl>
