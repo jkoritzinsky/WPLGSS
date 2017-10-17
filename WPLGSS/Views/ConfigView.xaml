@@ -6,7 +6,15 @@
              xmlns:local="clr-namespace:WPLGSS.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
-    </Grid>
+  <DockPanel>
+    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+      <Button Content="Create New Channel" VerticalAlignment="Top" />
+    </StackPanel>
+    <StackPanel>
+      <TextBlock Text="Input Channels" />
+      <DataGrid ItemsSource="{Binding InputChannels}" />
+      <TextBlock Text="Output Channels" />
+      <DataGrid ItemsSource="{Binding OutputChannels}" />
+    </StackPanel>
+  </DockPanel>
 </UserControl>

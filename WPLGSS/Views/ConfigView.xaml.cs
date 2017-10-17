@@ -50,6 +50,7 @@ namespace WPLGSS.Views
         
         [ImportingConstructor]
         public ConfigView(ConfigViewModel model)
+            :this()
         {
             DataContext = model;
         }
