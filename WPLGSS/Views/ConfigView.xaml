@@ -4,17 +4,43 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPLGSS.Views"
+             xmlns:core="clr-namespace:System;assembly=mscorlib"
+             xmlns:model="clr-namespace:WPLGSS.Models"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-  <DockPanel>
-    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-      <Button Content="Create New Channel" VerticalAlignment="Top" />
-    </StackPanel>
-    <StackPanel>
-      <TextBlock Text="Input Channels" />
-      <DataGrid ItemsSource="{Binding InputChannels}" />
-      <TextBlock Text="Output Channels" />
-      <DataGrid ItemsSource="{Binding OutputChannels}" />
-    </StackPanel>
-  </DockPanel>
+             d:DesignHeight="300" d:DesignWidth="500">
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="myEnum" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type Type="model:ChannelSource"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Button Content="Create New Input Channel" VerticalAlignment="Top" Command="{Binding AddInputChannelCommand}" />
+            <Button Margin="5,0,0,0" Content="Create New Output Channel" VerticalAlignment="Top" Command="{Binding AddOutputChannelCommand}" />
+        </StackPanel>
+        <StackPanel>
+            <TextBlock Text="Input Channels" />
+            <DataGrid ItemsSource="{Binding InputChannels}" AutoGenerateColumns="False" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Channel ID" Binding="{Binding ChannelId, Mode=TwoWay}" />
+                    <DataGridComboBoxColumn Header="Channel Source" SelectedValueBinding="{Binding Source, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource myEnum}}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay}" />
+                    <DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay}" />
+                    <DataGridTextColumn Header="Scaling Function" Binding="{Binding Scaling, Mode=TwoWay}" />
+                    <DataGridTextColumn Header="Unit" Binding="{Binding Unit, Mode=TwoWay}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBlock Text="Output Channels" />
+            <DataGrid ItemsSource="{Binding OutputChannels}" AutoGenerateColumns="False" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Channel ID" Binding="{Binding ChannelId, Mode=TwoWay}" />
+                    <DataGridComboBoxColumn Header="Channel Source" SelectedValueBinding="{Binding Source, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource myEnum}}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay}" />
+                    <DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </DockPanel>
 </UserControl>

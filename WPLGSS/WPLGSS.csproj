@@ -69,6 +69,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Channel.cs" />
+    <Compile Include="Models\Config.cs" />
+    <Compile Include="Models\InputChannel.cs" />
+    <Compile Include="Services\ConfigService.cs" />
+    <Compile Include="Services\IConfigService.cs" />
     <Compile Include="ViewModels\ConfigViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\SequenceManagerViewModel.cs" />
