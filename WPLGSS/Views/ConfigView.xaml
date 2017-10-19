@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:WPLGSS.Views"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:interactivity="clr-namespace:WPLGSS.Interactivity"
              xmlns:core="clr-namespace:System;assembly=mscorlib"
              xmlns:model="clr-namespace:WPLGSS.Models"
              mc:Ignorable="d" 
@@ -16,10 +18,24 @@
         </ObjectDataProvider>
     </UserControl.Resources>
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-            <Button Content="Create New Input Channel" VerticalAlignment="Top" Command="{Binding AddInputChannelCommand}" />
-            <Button Margin="5,0,0,0" Content="Create New Output Channel" VerticalAlignment="Top" Command="{Binding AddOutputChannelCommand}" />
-        </StackPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <Button DockPanel.Dock="Left" HorizontalAlignment="Left" Content="Create New Input Channel" VerticalAlignment="Top" Command="{Binding AddInputChannelCommand}" />
+            <Button DockPanel.Dock="Left" HorizontalAlignment="Left" Margin="5,0,0,0" Content="Create New Output Channel" VerticalAlignment="Top" Command="{Binding AddOutputChannelCommand}" />
+            <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Content="Save Config" Command="{Binding SaveConfigCommand}">
+                <i:Interaction.Triggers>
+                    <prism:InteractionRequestTrigger SourceObject="{Binding SaveRequest, Mode=OneWay}">
+                        <interactivity:SaveFileAction />
+                    </prism:InteractionRequestTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+            <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0" Content="Open Config" Command="{Binding OpenConfigCommand}">
+                <i:Interaction.Triggers>
+                    <prism:InteractionRequestTrigger SourceObject="{Binding OpenRequest, Mode=OneWay}">
+                        <interactivity:OpenFileAction />
+                    </prism:InteractionRequestTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+        </DockPanel>
         <StackPanel>
             <TextBlock Text="Input Channels" />
             <DataGrid ItemsSource="{Binding InputChannels}" AutoGenerateColumns="False" CanUserAddRows="False">

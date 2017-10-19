@@ -1,4 +1,5 @@
 ﻿using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
+using WPLGSS.Interactivity;
 using WPLGSS.Models;
 using WPLGSS.Services;
 
@@ -27,6 +29,8 @@ namespace WPLGSS.ViewModels
             UpdateFromUnderlyingConfig(configService.Config);
             AddInputChannelCommand = new DelegateCommand(AddInputChannel);
             AddOutputChannelCommand = new DelegateCommand(AddOutputChannel);
+            SaveConfigCommand = new DelegateCommand(SaveConfig);
+            OpenConfigCommand = new DelegateCommand(OpenConfig);
         }
 
         public string Name => "Configuration";
@@ -61,6 +65,8 @@ namespace WPLGSS.ViewModels
 
         public ICommand AddInputChannelCommand { get; }
         public ICommand AddOutputChannelCommand { get; }
+        public ICommand SaveConfigCommand { get; }
+        public ICommand OpenConfigCommand { get; }
 
         private void AddInputChannel()
         {
@@ -70,6 +76,38 @@ namespace WPLGSS.ViewModels
         private void AddOutputChannel()
         {
             configService.Config.Channels.Add(new Channel());
+        }
+
+        public InteractionRequest<FileInteractionNotification> SaveRequest { get; } = new InteractionRequest<FileInteractionNotification>();
+
+        public InteractionRequest<FileInteractionNotification> OpenRequest { get; } = new InteractionRequest<FileInteractionNotification>();
+
+        private FileInteractionNotification fileNotification = new FileInteractionNotification
+        {
+            Filter = "WPLGSS Config (*.config)|*.config",
+            DefaultExtension = ".config"
+        };
+
+        private void SaveConfig()
+        {
+            SaveRequest.Raise(fileNotification, n =>
+            {
+                if (n.Confirmed)
+                {
+                    configService.SaveConfig(n.Path); 
+                }
+            });
+        }
+
+        private void OpenConfig()
+        {
+            OpenRequest.Raise(fileNotification, n =>
+            {
+                if (n.Confirmed)
+                {
+                    configService.SaveConfig(n.Path); 
+                }
+            });
         }
 
         private void UpdateFromUnderlyingConfig(Config config)
