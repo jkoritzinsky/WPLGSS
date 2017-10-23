@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using YamlDotNet.Serialization;
 
 namespace WPLGSS.Models
 {
@@ -14,7 +16,7 @@ namespace WPLGSS.Models
         Arduino
     }
 
-    public class Channel : BindableBase
+    public class Channel : BindableBase, IDataErrorInfo
     {
         private int channelId;
 
@@ -57,6 +59,25 @@ namespace WPLGSS.Models
             set
             {
                 SetProperty(ref description, value);
+            }
+        }
+
+        [YamlIgnore]
+        public string Error => null;
+
+        [YamlIgnore]
+        public string this[string columnName]
+        {
+            get
+            {
+                if (columnName == nameof(Name))
+                {
+                    if (string.IsNullOrWhiteSpace(Name))
+                    {
+                        return "Channel name cannot be empty";
+                    }
+                }
+                return null;
             }
         }
     }

@@ -81,6 +81,8 @@
     <Compile Include="Services\ConfigService.cs" />
     <Compile Include="Services\IConfigService.cs" />
     <Compile Include="Interactivity\OpenFileAction.cs" />
+    <Compile Include="Utilities\MathEquationParser.cs" />
+    <Compile Include="Utilities\TypeTextReader.cs" />
     <Compile Include="ViewModels\ConfigViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\SequenceManagerViewModel.cs" />

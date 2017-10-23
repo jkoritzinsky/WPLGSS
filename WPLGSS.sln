@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPLGSS", "WPLGSS\WPLGSS.csproj", "{99C9E82C-C594-446D-AA59-8FFBC43AD226}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPLGSS.UnitTests", "WPLGSS.UnitTests\WPLGSS.UnitTests.csproj", "{1BE5CCAD-F1BB-4371-BB76-A1038F29C034}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99C9E82C-C594-446D-AA59-8FFBC43AD226}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BE5CCAD-F1BB-4371-BB76-A1038F29C034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BE5CCAD-F1BB-4371-BB76-A1038F29C034}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BE5CCAD-F1BB-4371-BB76-A1038F29C034}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BE5CCAD-F1BB-4371-BB76-A1038F29C034}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
