@@ -78,13 +78,19 @@
     <Compile Include="Models\Channel.cs" />
     <Compile Include="Models\Config.cs" />
     <Compile Include="Models\InputChannel.cs" />
+    <Compile Include="Models\LiveChannel.cs" />
+    <Compile Include="Models\LiveDataModel.cs" />
     <Compile Include="Services\ConfigService.cs" />
+    <Compile Include="Services\DummyDataService.cs" />
     <Compile Include="Services\IConfigService.cs" />
     <Compile Include="Interactivity\OpenFileAction.cs" />
+    <Compile Include="Services\IDataAquisition.cs" />
+    <Compile Include="Services\StatusChangedEventArgs.cs" />
     <Compile Include="Utilities\MathEquationParser.cs" />
     <Compile Include="Utilities\TypeTextReader.cs" />
     <Compile Include="ViewModels\ConfigViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
+    <Compile Include="ViewModels\LiveDataViewModel.cs" />
     <Compile Include="ViewModels\SequenceManagerViewModel.cs" />
     <Compile Include="Views\ConfigView.xaml.cs">
       <DependentUpon>ConfigView.xaml</DependentUpon>
@@ -92,6 +98,11 @@
     <Compile Include="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\LiveDataSelector.cs" />
+    <Compile Include="Views\LiveDataView.xaml.cs">
+      <DependentUpon>LiveDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OutputConverter.cs" />
     <Compile Include="Views\SequenceManagerView.xaml.cs">
       <DependentUpon>SequenceManagerView.xaml</DependentUpon>
     </Compile>
@@ -100,6 +111,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HomeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LiveDataView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
