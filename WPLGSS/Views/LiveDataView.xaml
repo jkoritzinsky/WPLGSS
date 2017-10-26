@@ -5,45 +5,74 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPLGSS.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-  <UserControl.Resources>
-    <local:LiveDataSelector x:Key="Selector" />
-    <local:OutputConverter x:Key="OutputConverter" />
-    <DataTemplate x:Key="OutputChannel">
-      <ToggleButton Content="Toggle" IsChecked="{Binding Value, Mode=TwoWay, Converter={StaticResource OutputConverter}}" />
-    </DataTemplate>
-    <DataTemplate x:Key="InputChannel">
-      <StackPanel Orientation="Horizontal">
-        <TextBlock Text="{Binding Value}" />
-        <TextBlock Text="{Binding Channel.Unit}" />
-      </StackPanel>
-    </DataTemplate>
-  </UserControl.Resources>
-  <ItemsControl ItemsSource="{Binding DataModel.Channels}">
-    <ItemsControl.ItemTemplate>
-      <DataTemplate>
-          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <TextBlock Text="{Binding Channel.Name}" />
-            <ContentControl
+             d:DesignHeight="300" d:DesignWidth="300"
+             x:Name="LiveData">
+    <UserControl.Resources>
+        <local:LiveDataSelector x:Key="Selector" />
+        <local:OutputConverter x:Key="OutputConverter" />
+        <local:AddToGraphMultiConverter x:Key="AddToGraphMultiConverter" />
+        <local:GraphIdConverter x:Key="GraphIdConverter" />
+        <DataTemplate x:Key="OutputChannel">
+            <ToggleButton Content="Toggle" IsChecked="{Binding Value, Mode=TwoWay, Converter={StaticResource OutputConverter}}" />
+        </DataTemplate>
+        <DataTemplate x:Key="InputChannel">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Value}" />
+                <TextBlock Text="{Binding Channel.Unit}" />
+                <Button
+                    Content="Add to Graph"
+                    Command="{Binding DataContext.AddToGraphCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LiveDataView}}"
+                >
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource AddToGraphMultiConverter}">
+                            <MultiBinding.Bindings>
+                                <Binding Path="Channel" />
+                                <Binding Path="SelectedItem" ElementName="GraphPicker" />
+                            </MultiBinding.Bindings>
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                </Button>
+                <ComboBox
+                    x:Name="GraphPicker"
+                    IsEditable="false"
+                    IsReadOnly="true"
+                    SelectedIndex="0"
+                    ItemsSource="{Binding DataContext.GraphIds, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LiveDataView}}"
+                >
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource GraphIdConverter}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    <ItemsControl ItemsSource="{Binding DataModel.Channels}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding Channel.Name}" />
+                    <ContentControl
               Margin="5,0,0,0"
               Content="{Binding}"
               ContentTemplateSelector="{StaticResource Selector}"
-              MinWidth="100"
+              MinWidth="115"
             />
-          </StackPanel>
-      </DataTemplate>
-    </ItemsControl.ItemTemplate>
-    <ItemsControl.ItemContainerStyle>
-      <Style>
-        <Setter Property="Control.Margin" Value="5"/>
-        <Style.Triggers>
-          <Trigger Property="Control.IsMouseOver" Value="True">
-            <Setter Property="Control.ToolTip"
+                </StackPanel>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+        <ItemsControl.ItemContainerStyle>
+            <Style>
+                <Setter Property="Control.Margin" Value="5"/>
+                <Style.Triggers>
+                    <Trigger Property="Control.IsMouseOver" Value="True">
+                        <Setter Property="Control.ToolTip"
                     Value="{Binding RelativeSource={x:Static RelativeSource.Self},
                           Path=Content.Channel.Description}"/>
-          </Trigger>
-        </Style.Triggers>
-      </Style>
-    </ItemsControl.ItemContainerStyle>
-  </ItemsControl>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ItemsControl.ItemContainerStyle>
+    </ItemsControl>
 </UserControl>
