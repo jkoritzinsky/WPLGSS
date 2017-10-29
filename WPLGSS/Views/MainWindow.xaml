@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:local="clr-namespace:WPLGSS"
-        Title="{Binding Title}" Height="350" Width="525">
+        Title="{Binding Title}" Height="1000" Width="1000">
   <Window.Resources>
     <Style TargetType="{x:Type TabItem}" x:Key="TabItemRegionStyle">
       <Setter Property="Header" Value="{Binding DataContext.Name}" />

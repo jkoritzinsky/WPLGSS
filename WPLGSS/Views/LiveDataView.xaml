@@ -48,7 +48,7 @@
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
-    <ItemsControl ItemsSource="{Binding DataModel.Channels}">
+    <ItemsControl ItemsSource="{Binding Channels}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

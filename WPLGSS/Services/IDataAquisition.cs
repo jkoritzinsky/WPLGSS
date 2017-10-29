@@ -12,9 +12,8 @@ namespace WPLGSS.Services
     {
         void StartService();
 
-        LiveDataModel DataModel { get; }
-        
         event EventHandler<StatusChangedEventArgs> LabJackConnectionChanged;
         event EventHandler<StatusChangedEventArgs> ArduinoConnectionChanged;
+        event EventHandler<ChannelValueUpdatedEventArgs> ChannelValueUpdated;
     }
 }

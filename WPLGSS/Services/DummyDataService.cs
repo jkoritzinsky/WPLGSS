@@ -10,33 +10,9 @@ namespace WPLGSS.Services
 {
     [Export(typeof(IDataAquisition))] public class DummyDataService : IDataAquisition
     {
-        public DummyDataService()
-        {
-            DataModel = new LiveDataModel
-            {
-                Channels =
-                {
-                    new LiveChannel(new InputChannel
-                    {
-                        Name = "Input Channel Test",
-                        Unit = "atm"
-                    })
-                    {
-                        Value = 2.7
-                    },
-                    new LiveChannel(new Channel
-                    {
-                        Name= "Output Channel Test"
-                    })
-                }
-            };
-        }
-
-        public LiveDataModel DataModel { get; }
-
         public event EventHandler<StatusChangedEventArgs> LabJackConnectionChanged;
         public event EventHandler<StatusChangedEventArgs> ArduinoConnectionChanged;
-
+        public event EventHandler<ChannelValueUpdatedEventArgs> ChannelValueUpdated;
 
         public void StartService()
         {
