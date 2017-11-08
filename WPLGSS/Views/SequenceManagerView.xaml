@@ -4,17 +4,27 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WPLGSS"
+             xmlns:views="clr-namespace:WPLGSS.Views"
              xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
   <UserControl.Resources>
     <Style TargetType="{x:Type TabItem}" x:Key="SequenceEditorRegionStyle">
-      <Setter Property="Header" Value="{Binding DataContext.Name}" />
+      <Setter Property="Header" Value="{Binding Path}" />
     </Style>
   </UserControl.Resources>
-  <Grid>
+  <StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <Button Content="New Sequence" Command="{Binding NewSequenceCommand}" />
+    </StackPanel>
     <TabControl prism:RegionManager.RegionName="{x:Static local:RegionNames.SequenceEditorRegion}"
                 ItemContainerStyle="{StaticResource SequenceEditorRegionStyle}"
-                SelectedIndex="0" />
-  </Grid>
+                SelectedIndex="0">
+      <TabControl.ContentTemplate>
+        <DataTemplate>
+          <views:SequenceEditorView DataContext="{Binding Sequence}" />
+        </DataTemplate>
+      </TabControl.ContentTemplate>
+    </TabControl>
+  </StackPanel>
 </UserControl>

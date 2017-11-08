@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="WPLGSS.Views.EventEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPLGSS.Views"
+        xmlns:vm="clr-namespace:WPLGSS.ViewModels"
+        xmlns:core="clr-namespace:System;assembly=mscorlib"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d">
+  <UserControl.Resources>
+    <ObjectDataProvider x:Key="EventTypes" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
+      <ObjectDataProvider.MethodParameters>
+        <x:Type Type="vm:EventType"/>
+      </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+    <local:AbortEventTypeVisibilityConverter x:Key="AbortVisibilityConverter" />
+  </UserControl.Resources>
+  <StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <TextBlock>Channel Type:</TextBlock>
+      <ComboBox
+        IsEditable="False"
+        IsReadOnly="True"
+        ItemsSource="{Binding Source={StaticResource EventTypes}}"
+        SelectedItem="{Binding Type}"
+                    />
+    </StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <TextBlock>Start Time:</TextBlock>
+      <toolkit:TimeSpanUpDown Value="{Binding StartTime}" AllowTextInput="True" FractionalSecondsDigitsCount="3" />
+    </StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <TextBlock>End Time:</TextBlock>
+      <toolkit:TimeSpanUpDown Value="{Binding EndTime}" AllowTextInput="True" FractionalSecondsDigitsCount="3" />
+    </StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <TextBlock>Channel Name:</TextBlock>
+      <ComboBox
+        IsEditable="False"
+        IsReadOnly="True"
+        ItemsSource="{Binding ChannelOptions}"
+        SelectedItem="{Binding Channel}"
+                    />
+    </StackPanel>
+    <StackPanel Visibility="{Binding Type, Converter={StaticResource AbortVisibilityConverter}}">
+      <StackPanel Orientation="Horizontal">
+        <TextBlock>Safety Threshold: Between </TextBlock>
+        <TextBox Text="{Binding ThresholdMin}" />
+        <TextBlock> and </TextBlock>
+        <TextBox Text="{Binding ThresholdMax}" />
+      </StackPanel>
+    </StackPanel>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+      <Button Command="{Binding FinishCommand}" Content="OK" Width="75" Height="25" HorizontalAlignment="Right" Margin="0,10,0,0" />
+      <Button Command="{Binding CancelCommand}" Content="Cancel" Width="75" Height="25" HorizontalAlignment="Right" Margin="20,10,0,0" IsDefault="True"/>
+    </StackPanel>
+
+  </StackPanel>
+</UserControl>

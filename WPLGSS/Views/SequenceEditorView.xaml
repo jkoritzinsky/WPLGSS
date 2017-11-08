@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="WPLGSS.Views.SequenceEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:local="clr-namespace:WPLGSS.Views"
+             xmlns:prism="http://prismlibrary.com/"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+  <UserControl.Resources>
+    <local:SubsequenceConverter x:Key="SequenceConverter" />
+  </UserControl.Resources>
+  <ScrollViewer>
+    <StackPanel>
+      <StackPanel Orientation="Horizontal">
+        <i:Interaction.Triggers>
+          <prism:InteractionRequestTrigger SourceObject="{Binding CreateEventRequest}">
+            <prism:PopupWindowAction IsModal="True" WindowContentType="{x:Type local:EventEditor}" />
+          </prism:InteractionRequestTrigger>
+        </i:Interaction.Triggers>
+        <TextBlock>Name:</TextBlock>
+        <TextBox MinWidth="100" Text="{Binding Sequence.Name}" />
+        <Button Command="{Binding AddEventCommand}" CommandParameter="Primary">Add Event to Primary Sequence</Button>
+        <Button Command="{Binding AddEventCommand}" CommandParameter="Abort">Add Event to Abort Sequence</Button>
+      </StackPanel>
+      <TextBlock>Primary Sequence</TextBlock>
+      <local:SubsequenceView DataContext="{Binding Sequence.PrimarySequence, Converter={StaticResource SequenceConverter}}" />
+      <TextBlock>Abort Sequence</TextBlock>
+      <local:SubsequenceView DataContext="{Binding Sequence.AbortSequence, Converter={StaticResource SequenceConverter}}" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
