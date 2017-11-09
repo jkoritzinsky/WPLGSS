@@ -86,7 +86,7 @@ namespace WPLGSS.ViewModels
                 {
                     series.Items.Add(new EventBasedIntervalBarItem
                     {
-                        CategoryIndex = categories.IndexOf($"{evt.ChannelName} Abort Condition"),
+                        CategoryIndex = categories.IndexOf(evt.ChannelName),
                         Start = DateTimeAxis.ToDouble(BaseDate + evt.StartTime),
                         End = DateTimeAxis.ToDouble(BaseDate + evt.EndTime),
                         Color = OxyColors.LightSalmon,
@@ -122,7 +122,7 @@ namespace WPLGSS.ViewModels
 
         private static List<string> GetCategoriesFromEvents(ObservableCollection<Event> events)
         {
-            return events.SelectMany(evt => new[] { evt.ChannelName, $"{evt.ChannelName} Abort Condition" }).Distinct().ToList();
+            return events.Select(evt => evt.ChannelName).Distinct().ToList();
         }
 
         private PlotModel plot;

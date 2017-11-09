@@ -133,6 +133,7 @@
     <Compile Include="ViewModels\SubsequenceViewModel.cs" />
     <Compile Include="Views\AbortEventTypeVisibilityConverter.cs" />
     <Compile Include="Views\AddToGraphMultiConverter.cs" />
+    <Compile Include="Views\ChannelGroupDescription.cs" />
     <Compile Include="Views\ConfigView.xaml.cs">
       <DependentUpon>ConfigView.xaml</DependentUpon>
     </Compile>

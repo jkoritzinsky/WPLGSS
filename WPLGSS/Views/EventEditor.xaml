@@ -16,6 +16,7 @@
       </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
     <local:AbortEventTypeVisibilityConverter x:Key="AbortVisibilityConverter" />
+    <local:Inverter x:Key="Inverter" />
   </UserControl.Resources>
   <StackPanel>
     <StackPanel Orientation="Horizontal">
@@ -25,31 +26,56 @@
         IsReadOnly="True"
         ItemsSource="{Binding Source={StaticResource EventTypes}}"
         SelectedItem="{Binding Type}"
-                    />
+      />
     </StackPanel>
     <StackPanel Orientation="Horizontal">
       <TextBlock>Start Time:</TextBlock>
-      <toolkit:TimeSpanUpDown Value="{Binding StartTime}" AllowTextInput="True" FractionalSecondsDigitsCount="3" />
+      <toolkit:TimeSpanUpDown
+        Value="{Binding StartTime, ValidatesOnNotifyDataErrors=True}"
+        AllowTextInput="True"
+        FractionalSecondsDigitsCount="3"
+      />
     </StackPanel>
     <StackPanel Orientation="Horizontal">
       <TextBlock>End Time:</TextBlock>
-      <toolkit:TimeSpanUpDown Value="{Binding EndTime}" AllowTextInput="True" FractionalSecondsDigitsCount="3" />
+      <toolkit:TimeSpanUpDown
+        Value="{Binding EndTime, ValidatesOnNotifyDataErrors=True}"
+        AllowTextInput="True"
+        FractionalSecondsDigitsCount="3"
+      />
     </StackPanel>
     <StackPanel Orientation="Horizontal">
-      <TextBlock>Channel Name:</TextBlock>
+      <TextBlock x:Name="ChannelHeader">Channel Name:</TextBlock>
       <ComboBox
         IsEditable="False"
         IsReadOnly="True"
-        ItemsSource="{Binding ChannelOptions}"
-        SelectedItem="{Binding Channel}"
-                    />
+        SelectedValuePath="Name"
+        DisplayMemberPath="Name"
+        SelectedValue="{Binding Channel, ValidatesOnNotifyDataErrors=True}"
+      >
+        <ComboBox.ItemsSource>
+          <Binding>
+            <Binding.Source>
+              <CollectionViewSource Source="{Binding DataContext.ChannelOptions, Source={x:Reference ChannelHeader}}">
+                <!-- We need a reference to something in the visual tree that doesn't depend on this element being created.-->
+                <CollectionViewSource.GroupDescriptions>
+                  <local:ChannelGroupDescription />
+                </CollectionViewSource.GroupDescriptions>
+              </CollectionViewSource>
+            </Binding.Source>
+          </Binding>
+        </ComboBox.ItemsSource>
+        <ComboBox.GroupStyle>
+          <x:Static Member="GroupStyle.Default" />
+        </ComboBox.GroupStyle>
+      </ComboBox>
     </StackPanel>
     <StackPanel Visibility="{Binding Type, Converter={StaticResource AbortVisibilityConverter}}">
       <StackPanel Orientation="Horizontal">
         <TextBlock>Safety Threshold: Between </TextBlock>
-        <TextBox Text="{Binding ThresholdMin}" />
+        <TextBox Text="{Binding ThresholdMin, ValidatesOnNotifyDataErrors=True}" />
         <TextBlock> and </TextBlock>
-        <TextBox Text="{Binding ThresholdMax}" />
+        <TextBox Text="{Binding ThresholdMax, ValidatesOnNotifyDataErrors=True}" />
       </StackPanel>
     </StackPanel>
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

@@ -3,6 +3,7 @@ using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using WPLGSS.Models;
 using WPLGSS.Services;
+using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace WPLGSS.ViewModels
 {
@@ -21,14 +24,14 @@ namespace WPLGSS.ViewModels
 
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public class EventEditorViewModel : BindableBase, IInteractionRequestAware
+    public class EventEditorViewModel : BindableBase, IInteractionRequestAware, INotifyDataErrorInfo
     {
         private EventType type;
 
         [ImportingConstructor]
         public EventEditorViewModel(IConfigService config)
         {
-            ChannelOptions = config.Config.Channels.Select(channel => channel.Name);
+            ChannelOptions = config.Config.Channels;
             FinishCommand = new DelegateCommand(() =>
             {
                 if (notification is IConfirmation confirmation)
@@ -37,7 +40,7 @@ namespace WPLGSS.ViewModels
                 }
                 notification.Content = CreateEvent();
                 FinishInteraction?.Invoke();
-            });
+            }, () => !HasErrors);
             CancelCommand = new DelegateCommand(() =>
             {
                 if (notification is IConfirmation confirmation)
@@ -46,6 +49,10 @@ namespace WPLGSS.ViewModels
                 }
                 FinishInteraction?.Invoke();
             });
+
+            Channel = ChannelOptions.FirstOrDefault()?.Name;
+
+            Validate();
         }
 
         public EventType Type
@@ -53,7 +60,7 @@ namespace WPLGSS.ViewModels
             get { return type; }
             set
             {
-                SetProperty(ref type, value);
+                SetProperty(ref type, value, Validate);
             }
         }
 
@@ -62,17 +69,17 @@ namespace WPLGSS.ViewModels
         public string Channel
         {
             get { return channel; }
-            set { SetProperty(ref channel, value); }
+            set { SetProperty(ref channel, value, Validate); }
         }
 
-        public IEnumerable<string> ChannelOptions { get; }
+        public IEnumerable<Channel> ChannelOptions { get; }
 
         private TimeSpan startTime;
 
         public TimeSpan StartTime
         {
             get { return startTime; }
-            set { SetProperty(ref startTime, value); }
+            set { SetProperty(ref startTime, value, Validate); }
         }
 
         private TimeSpan endTime;
@@ -80,7 +87,7 @@ namespace WPLGSS.ViewModels
         public TimeSpan EndTime
         {
             get { return endTime; }
-            set { SetProperty(ref endTime, value); }
+            set { SetProperty(ref endTime, value, Validate); }
         }
 
         private double thresholdMin;
@@ -88,7 +95,7 @@ namespace WPLGSS.ViewModels
         public double ThresholdMin
         {
             get { return thresholdMin; }
-            set { SetProperty(ref thresholdMin, value); }
+            set { SetProperty(ref thresholdMin, value, Validate); }
         }
 
         private double thresholdMax;
@@ -96,7 +103,10 @@ namespace WPLGSS.ViewModels
         public double ThresholdMax
         {
             get { return thresholdMax; }
-            set { SetProperty(ref thresholdMax, value); }
+            set
+            {
+                SetProperty(ref thresholdMax, value, Validate);
+            }
         }
 
         private INotification notification;
@@ -154,10 +164,92 @@ namespace WPLGSS.ViewModels
             evt.ChannelName = Channel;
             return evt;
         }
-
         public Action FinishInteraction { get; set; }
 
-        public ICommand FinishCommand { get; }
+        public DelegateCommand FinishCommand { get; }
         public ICommand CancelCommand { get; }
+
+        public bool HasErrors => errors.Count != 0;
+
+        private Dictionary<string, string> errors = new Dictionary<string, string>();
+
+        public IEnumerable GetErrors(string propertyName)
+        {
+            if (errors.ContainsKey(propertyName))
+            {
+                yield return errors[propertyName];
+            }
+        }
+
+        private void Validate()
+        {
+            var updatedValidations = new List<string>();
+
+            if (!(ThresholdMin < ThresholdMax) && Type == EventType.Abort)
+            {
+                const string thresholdError = "Threshold minimum must be less than the threshold maximum.";
+                errors[nameof(ThresholdMin)] = thresholdError;
+                errors[nameof(ThresholdMax)] = thresholdError;
+                updatedValidations.Add(nameof(ThresholdMin));
+                updatedValidations.Add(nameof(ThresholdMax));
+            }
+            else
+            {
+                errors.Remove(nameof(ThresholdMin));
+                errors.Remove(nameof(ThresholdMax));
+                updatedValidations.Add(nameof(ThresholdMin));
+                updatedValidations.Add(nameof(ThresholdMax));
+            }
+
+
+            const string timeError = "Start time must be before end time.";
+            if (!(StartTime < EndTime))
+            {
+                errors[nameof(EndTime)] = timeError;
+                updatedValidations.Add(nameof(EndTime));
+            }
+            else
+            {
+                errors.Remove(nameof(EndTime));
+                updatedValidations.Add(nameof(EndTime));
+            }
+
+            if (StartTime < TimeSpan.Zero)
+            {
+                errors[nameof(StartTime)] = $"Start time cannot be before {TimeSpan.Zero}.";
+            }
+            else
+            {
+                errors.Remove(nameof(StartTime));
+                updatedValidations.Add(nameof(StartTime));
+            }
+            
+            if (ChannelOptions.All(channel => channel.Name != Channel))
+            {
+                errors[nameof(Channel)] = "Channel name is not a channel name in this current configuration";
+                updatedValidations.Add(nameof(Channel));
+            }
+            else if (ChannelOptions.First(channel => channel.Name == Channel) is InputChannel && Type == EventType.Output)
+            {
+                errors[nameof(Channel)] = "Cannot set an output on an input channel.";
+                updatedValidations.Add(nameof(Channel));
+            }
+            else if (!(ChannelOptions.First(channel => channel.Name == Channel) is InputChannel) && Type == EventType.Abort)
+            {
+                errors[nameof(Channel)] = "Cannot set an abort condition on an output channel.";
+                updatedValidations.Add(nameof(Channel));
+            }
+            else
+            {
+                errors.Remove(nameof(Channel));
+                updatedValidations.Add(nameof(Channel));
+            }
+
+            updatedValidations.ForEach(prop => ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(prop)));
+            RaisePropertyChanged(nameof(HasErrors));
+            FinishCommand.RaiseCanExecuteChanged();
+        }
+        
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
     }
 }
