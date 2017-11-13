@@ -73,6 +73,24 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.2.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=3.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.2.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.2.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
     <Reference Include="YamlDotNet, Version=4.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\YamlDotNet.4.2.2\lib\net35\YamlDotNet.dll</HintPath>
     </Reference>
@@ -84,29 +102,47 @@
     </ApplicationDefinition>
     <Compile Include="Interactivity\FileInteractionNotification.cs" />
     <Compile Include="Interactivity\SaveFileAction.cs" />
+    <Compile Include="Models\AbortCondition.cs" />
     <Compile Include="Models\Channel.cs" />
     <Compile Include="Models\Config.cs" />
+    <Compile Include="Models\Event.cs" />
     <Compile Include="Models\InputChannel.cs" />
     <Compile Include="Models\LiveChannel.cs" />
+    <Compile Include="Models\OutputEvent.cs" />
+    <Compile Include="Models\Sequence.cs" />
     <Compile Include="Services\ChannelValueUpdatedEventArgs.cs" />
     <Compile Include="Services\ConfigService.cs" />
     <Compile Include="Services\DummyDataService.cs" />
     <Compile Include="Services\IConfigService.cs" />
     <Compile Include="Interactivity\OpenFileAction.cs" />
     <Compile Include="Services\IDataAquisition.cs" />
+    <Compile Include="Services\ISequenceEditorService.cs" />
+    <Compile Include="Services\ISequencePersistence.cs" />
+    <Compile Include="Services\SequenceEditorService.cs" />
+    <Compile Include="Services\SequencePersistence.cs" />
     <Compile Include="Services\StatusChangedEventArgs.cs" />
     <Compile Include="Utilities\MathEquationParser.cs" />
     <Compile Include="Utilities\TypeTextReader.cs" />
     <Compile Include="ViewModels\AddToGraphEvent.cs" />
     <Compile Include="ViewModels\ConfigViewModel.cs" />
+    <Compile Include="ViewModels\EventEditorViewModel.cs" />
     <Compile Include="ViewModels\GraphCreatedEvent.cs" />
     <Compile Include="ViewModels\GraphsViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\LiveDataViewModel.cs" />
+    <Compile Include="Services\SequenceFile.cs" />
     <Compile Include="ViewModels\SequenceManagerViewModel.cs" />
+    <Compile Include="ViewModels\SequenceViewModel.cs" />
+    <Compile Include="ViewModels\SubsequenceViewModel.cs" />
+    <Compile Include="Views\AbortEventTypeVisibilityConverter.cs" />
     <Compile Include="Views\AddToGraphMultiConverter.cs" />
+    <Compile Include="Views\BoolToVisibilityConverter.cs" />
+    <Compile Include="Views\ChannelGroupDescription.cs" />
     <Compile Include="Views\ConfigView.xaml.cs">
       <DependentUpon>ConfigView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EventEditor.xaml.cs">
+      <DependentUpon>EventEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GraphIdConverter.cs" />
     <Compile Include="Views\GraphView.xaml.cs">
@@ -115,15 +151,27 @@
     <Compile Include="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Inverter.cs" />
     <Compile Include="Views\LiveDataSelector.cs" />
     <Compile Include="Views\LiveDataView.xaml.cs">
       <DependentUpon>LiveDataView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OutputConverter.cs" />
+    <Compile Include="Views\SubsequenceConverter.cs" />
+    <Compile Include="Views\SequenceEditorView.xaml.cs">
+      <DependentUpon>SequenceEditorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SequenceManagerView.xaml.cs">
       <DependentUpon>SequenceManagerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SubsequenceView.xaml.cs">
+      <DependentUpon>SubsequenceView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Views\ConfigView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EventEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -162,7 +210,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\SequenceEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SequenceManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SubsequenceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

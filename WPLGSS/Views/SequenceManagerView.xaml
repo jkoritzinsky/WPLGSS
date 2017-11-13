@@ -4,17 +4,41 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WPLGSS"
+             xmlns:views="clr-namespace:WPLGSS.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:interactivity="clr-namespace:WPLGSS.Interactivity"
              xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
   <UserControl.Resources>
     <Style TargetType="{x:Type TabItem}" x:Key="SequenceEditorRegionStyle">
-      <Setter Property="Header" Value="{Binding DataContext.Name}" />
+      <Setter Property="Header" Value="{Binding Path}" />
     </Style>
   </UserControl.Resources>
-  <Grid>
+  <StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding SaveRequest, Mode=OneWay}">
+          <interactivity:SaveFileAction />
+        </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding OpenRequest, Mode=OneWay}">
+          <interactivity:OpenFileAction />
+        </prism:InteractionRequestTrigger>
+      </i:Interaction.Triggers>
+      <Button Content="New Sequence" Command="{Binding NewSequenceCommand}" />
+      <Button Content="Open" Margin="5,0,0,0" Command="{Binding OpenSequenceCommand}" />
+      <Button Content="Save" Margin="5,0,0,0" Command="{Binding SaveSequenceCommand}" CommandParameter="False" />
+      <Button Content="Save As" Margin="5,0,0,0" Command="{Binding SaveSequenceCommand}" CommandParameter="True" />
+    </StackPanel>
     <TabControl prism:RegionManager.RegionName="{x:Static local:RegionNames.SequenceEditorRegion}"
                 ItemContainerStyle="{StaticResource SequenceEditorRegionStyle}"
-                SelectedIndex="0" />
-  </Grid>
+                SelectedItem="{Binding CurrentSequence}"
+                x:Name="SequenceEditor">
+      <TabControl.ContentTemplate>
+        <DataTemplate>
+          <views:SequenceEditorView DataContext="{Binding Sequence}" />
+        </DataTemplate>
+      </TabControl.ContentTemplate>
+    </TabControl>
+  </StackPanel>
 </UserControl>
