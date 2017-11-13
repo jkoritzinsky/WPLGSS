@@ -50,6 +50,16 @@ namespace WPLGSS.ViewModels
                 FinishInteraction?.Invoke();
             });
 
+            DeleteCommand = new DelegateCommand(() =>
+            {
+                if (notification is IConfirmation confirmation)
+                {
+                    confirmation.Confirmed = true;
+                }
+                notification.Content = null;
+                FinishInteraction?.Invoke();
+            }, () => CanDeleteEvent);
+
             Channel = ChannelOptions.FirstOrDefault()?.Name;
 
             Validate();
@@ -69,7 +79,21 @@ namespace WPLGSS.ViewModels
         public string Channel
         {
             get { return channel; }
-            set { SetProperty(ref channel, value, Validate); }
+            set
+            {
+                SetProperty(ref channel, value, () =>
+                {
+                    if (ChannelOptions.First(channelDesc => channelDesc.Name == value) is InputChannel input)
+                    {
+                        ThresholdUnit = input.Unit;
+                    }
+                    else
+                    {
+                        ThresholdUnit = string.Empty;
+                    }
+                    Validate();
+                });
+            }
         }
 
         public IEnumerable<Channel> ChannelOptions { get; }
@@ -109,6 +133,17 @@ namespace WPLGSS.ViewModels
             }
         }
 
+        private string thresholdUnit;
+
+        public string ThresholdUnit
+        {
+            get { return thresholdUnit; }
+            set
+            {
+                SetProperty(ref thresholdUnit, value, Validate);
+            }
+        }
+
         private INotification notification;
 
         public INotification Notification
@@ -121,8 +156,12 @@ namespace WPLGSS.ViewModels
                 {
                     SetInitialContent(evt);
                 }
+                RaisePropertyChanged(nameof(CanDeleteEvent));
+                DeleteCommand.RaiseCanExecuteChanged();
             }
         }
+
+        public bool CanDeleteEvent => notification.Content != null;
 
         private void SetInitialContent(Event evt)
         {
@@ -168,6 +207,8 @@ namespace WPLGSS.ViewModels
 
         public DelegateCommand FinishCommand { get; }
         public ICommand CancelCommand { get; }
+
+        public DelegateCommand DeleteCommand { get; }
 
         public bool HasErrors => errors.Count != 0;
 

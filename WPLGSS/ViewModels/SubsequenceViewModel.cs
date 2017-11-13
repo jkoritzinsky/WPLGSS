@@ -78,7 +78,7 @@ namespace WPLGSS.ViewModels
                         Start = DateTimeAxis.ToDouble(BaseDate + evt.StartTime),
                         End = DateTimeAxis.ToDouble(BaseDate + evt.EndTime),
                         Color = OxyColors.Green,
-                        Title = $"Open {evt.ChannelName}.",
+                        Title = $"Energize {evt.ChannelName}.",
                         Event = evt
                     });
                 }
@@ -114,8 +114,11 @@ namespace WPLGSS.ViewModels
                 if (confirmation.Confirmed)
                 {
                     Events.Remove(evt);
-                    Events.Add((Event)confirmation.Content);
-                    RebuildPlotData();
+                    if (confirmation.Content is Event updatedEvent)
+                    {
+                        Events.Add(updatedEvent);
+                        RebuildPlotData(); 
+                    }
                 }
             });
         }
