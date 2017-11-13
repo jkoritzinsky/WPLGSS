@@ -83,7 +83,7 @@ namespace WPLGSS.ViewModels
             {
                 SetProperty(ref channel, value, () =>
                 {
-                    if (ChannelOptions.First(channelDesc => channelDesc.Name == value) is InputChannel input)
+                    if (ChannelOptions.FirstOrDefault(channelDesc => channelDesc.Name == value) is InputChannel input)
                     {
                         ThresholdUnit = input.Unit;
                     }

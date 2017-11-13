@@ -33,7 +33,7 @@
     <TabControl prism:RegionManager.RegionName="{x:Static local:RegionNames.SequenceEditorRegion}"
                 ItemContainerStyle="{StaticResource SequenceEditorRegionStyle}"
                 SelectedItem="{Binding CurrentSequence}"
-                x:Name="SequenceEditor">
+    >
       <TabControl.ContentTemplate>
         <DataTemplate>
           <views:SequenceEditorView DataContext="{Binding Sequence}" />

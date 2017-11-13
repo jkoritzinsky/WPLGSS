@@ -22,7 +22,7 @@ namespace WPLGSS.ViewModels
         private const string NewSequenceName = "New Sequence";
         private readonly IConfigService configService;
         private readonly ISequenceEditorService fileEditorService;
-        private readonly ISequencePersistence sequencePersisence;
+        private readonly ISequencePersistence sequencePersistence;
 
         [ImportingConstructor]
         public SequenceManagerViewModel(IConfigService configService, ISequenceEditorService fileEditorService, ISequencePersistence sequencePersisence)
@@ -37,7 +37,7 @@ namespace WPLGSS.ViewModels
             SaveSequenceCommand = new DelegateCommand<string>(str => SaveSequence(str != null ? Convert.ToBoolean(str) : false), _ => CurrentSequence != null);
             this.configService = configService;
             this.fileEditorService = fileEditorService;
-            this.sequencePersisence = sequencePersisence;
+            this.sequencePersistence = sequencePersisence;
         }
 
         public string Name => "Sequence Manager";
@@ -78,7 +78,7 @@ namespace WPLGSS.ViewModels
         {
             if (CurrentSequence.Path != NewSequenceName && !saveAs)
             {
-                sequencePersisence.SaveSequence(currentSequence.Path, CurrentSequence.Sequence.Sequence);
+                sequencePersistence.SaveSequence(currentSequence.Path, CurrentSequence.Sequence.Sequence);
             }
             else
             {
@@ -86,7 +86,7 @@ namespace WPLGSS.ViewModels
                 {
                     if (n.Confirmed)
                     {
-                        sequencePersisence.SaveSequence(currentSequence.Path, CurrentSequence.Sequence.Sequence);
+                        sequencePersistence.SaveSequence(currentSequence.Path, CurrentSequence.Sequence.Sequence);
                         fileEditorService.UpdateViewNameForSequence(RegionNames.SequenceEditorRegion, n.Path, CurrentSequence);
                     }
                 }); 
@@ -99,7 +99,7 @@ namespace WPLGSS.ViewModels
             {
                 if (n.Confirmed)
                 {
-                    var sequence = sequencePersisence.OpenSequence(n.Path);
+                    var sequence = sequencePersistence.OpenSequence(n.Path);
                     var viewModel = new SequenceViewModel(configService, sequence);
                     fileEditorService.OpenSequenceInRegion(RegionNames.SequenceEditorRegion, n.Path, viewModel);
                 }

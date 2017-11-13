@@ -4,16 +4,59 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WPLGSS"
+             xmlns:views="clr-namespace:WPLGSS.Views"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:interactivity="clr-namespace:WPLGSS.Interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+  <UserControl.Resources>
+    <Style TargetType="{x:Type TabItem}" x:Key="SequenceViewerRegionStyle">
+      <Setter Property="Header" Value="{Binding Sequence.Sequence.Name}" />
+    </Style>
+    <views:SubsequenceConverter x:Key="SequenceConverter" />
+  </UserControl.Resources>
   <DockPanel>
     <DockPanel Dock="Top">
       <ToggleButton Content="Record" DockPanel.Dock="Right" VerticalAlignment="Top" HorizontalAlignment="Right"  />
       <ContentControl prism:RegionManager.RegionName="{x:Static local:RegionNames.GraphRegion}" />
     </DockPanel>
+    <StackPanel DockPanel.Dock="Bottom">
+      <StackPanel Orientation="Horizontal">
+        <Button Content="Open Sequence" Command="{Binding OpenSequenceCommand}">
+          <i:Interaction.Triggers>
+            <prism:InteractionRequestTrigger SourceObject="{Binding OpenRequest, Mode=OneWay}">
+              <interactivity:OpenFileAction />
+            </prism:InteractionRequestTrigger>
+          </i:Interaction.Triggers>
+        </Button>
+      </StackPanel>
+      <TabControl prism:RegionManager.RegionName="{x:Static local:RegionNames.SequenceRunnerRegion}"
+                ItemContainerStyle="{StaticResource SequenceViewerRegionStyle}"
+                SelectedItem="{Binding CurrentSequence}"
+                MinHeight="150"
+      >
+        <TabControl.ContentTemplate>
+          <DataTemplate>
+            <StackPanel Orientation="Horizontal">
+              <Button Command="{Binding DataContext.RunSequence, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type views:LiveView}}}"
+                      CommandParameter="{Binding}">
+                <Path Fill="Green" Data="M 5,0 L 5,50 L 50,25 Z" />
+              </Button>
+              <StackPanel Orientation="Vertical">
+                <TextBlock HorizontalAlignment="Center">Primary Sequence</TextBlock>
+                <views:SubsequenceView DataContext="{Binding Sequence.Sequence.PrimarySequence, Converter={StaticResource SequenceConverter}}" />
+              </StackPanel>
+              <StackPanel Orientation="Vertical">
+                <TextBlock HorizontalAlignment="Center">Abort Sequence</TextBlock>
+                <views:SubsequenceView DataContext="{Binding Sequence.Sequence.AbortSequence, Converter={StaticResource SequenceConverter}}" />
+              </StackPanel>
+            </StackPanel>
+          </DataTemplate>
+        </TabControl.ContentTemplate>
+      </TabControl>
+    </StackPanel>
     <ContentControl DockPanel.Dock="Right" VerticalAlignment="Center" prism:RegionManager.RegionName="{x:Static local:RegionNames.LiveDataRegion}" />
-    <ContentControl DockPanel.Dock="Bottom"  prism:RegionManager.RegionName="{x:Static local:RegionNames.SequenceRunnerRegion}" />
     <ContentControl  prism:RegionManager.RegionName="{x:Static local:RegionNames.SchematicRegion}" />
   </DockPanel>
 </UserControl>
