@@ -17,36 +17,11 @@ namespace WPLGSS.Services
     public class SequenceEditorService : ISequenceEditorService
     {
         private readonly IRegionManager regionManager;
-        private Deserializer deserializer;
-        private Serializer serializer;
 
         [ImportingConstructor]
         public SequenceEditorService(IRegionManager regionManager)
         {
             this.regionManager = regionManager;
-
-            var deserializerBuilder = new DeserializerBuilder();
-            deserializerBuilder
-                .WithTagMapping("tag:yaml.org,2002:abort", typeof(AbortCondition))
-                .WithTagMapping("tag:yaml.org,2002:output", typeof(OutputEvent))
-                .WithNamingConvention(new CamelCaseNamingConvention());
-            deserializer = deserializerBuilder.Build();
-
-            var serializerBuilder = new SerializerBuilder();
-            serializerBuilder
-                .WithTagMapping("tag:yaml.org,2002:abort", typeof(AbortCondition))
-                .WithTagMapping("tag:yaml.org,2002:output", typeof(OutputEvent))
-                .WithNamingConvention(new CamelCaseNamingConvention());
-            serializer = serializerBuilder.Build();
-        }
-
-        public Sequence OpenSequenceFromFile(string path)
-        {
-            using (var fileStream = File.OpenRead(path))
-            using (var reader = new StreamReader(fileStream))
-            {
-                return deserializer.Deserialize<Sequence>(reader);
-            }
         }
 
         public void OpenSequenceInRegion(string editorRegionName, string path, SequenceViewModel sequence)
@@ -64,18 +39,8 @@ namespace WPLGSS.Services
             editorRegion.Activate(view);
         }
 
-        public void SaveSequence(string editorRegionName, string path, SequenceFile sequenceFile)
+        public void UpdateViewNameForSequence(string editorRegionName, string path, SequenceFile sequenceFile)
         {
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-            using (var fileStream = File.OpenWrite(path))
-            using (var writer = new StreamWriter(fileStream))
-            {
-                serializer.Serialize(writer, sequenceFile.Sequence.Sequence);
-            }
-
             if (path != sequenceFile.Path)
             {
                 var newView = new SequenceFile(path, sequenceFile.Sequence);

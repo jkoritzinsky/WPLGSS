@@ -22,9 +22,10 @@ namespace WPLGSS.ViewModels
         private const string NewSequenceName = "New Sequence";
         private readonly IConfigService configService;
         private readonly ISequenceEditorService fileEditorService;
+        private readonly ISequencePersistence sequencePersisence;
 
         [ImportingConstructor]
-        public SequenceManagerViewModel(IConfigService configService, ISequenceEditorService fileEditorService)
+        public SequenceManagerViewModel(IConfigService configService, ISequenceEditorService fileEditorService, ISequencePersistence sequencePersisence)
         {
             NewSequenceCommand = new DelegateCommand(() =>
                 fileEditorService.OpenSequenceInRegion(
@@ -33,9 +34,10 @@ namespace WPLGSS.ViewModels
                     new SequenceViewModel(configService,
                         new Sequence())));
             OpenSequenceCommand = new DelegateCommand(OpenSequence);
-            SaveSequenceCommand = new DelegateCommand(SaveSequence, () => CurrentSequence != null);
+            SaveSequenceCommand = new DelegateCommand<string>(str => SaveSequence(str != null ? Convert.ToBoolean(str) : false), _ => CurrentSequence != null);
             this.configService = configService;
             this.fileEditorService = fileEditorService;
+            this.sequencePersisence = sequencePersisence;
         }
 
         public string Name => "Sequence Manager";
@@ -58,7 +60,7 @@ namespace WPLGSS.ViewModels
             }
         }
 
-        public DelegateCommand SaveSequenceCommand { get; }
+        public DelegateCommand<string> SaveSequenceCommand { get; }
 
         public ICommand OpenSequenceCommand { get; }
 
@@ -72,19 +74,23 @@ namespace WPLGSS.ViewModels
             DefaultExtension = ".seq.yaml"
         };
 
-        private void SaveSequence()
+        private void SaveSequence(bool saveAs)
         {
-            if (CurrentSequence.Path != NewSequenceName)
+            if (CurrentSequence.Path != NewSequenceName && !saveAs)
             {
-                fileEditorService.SaveSequence(RegionNames.SequenceEditorRegion, CurrentSequence.Path, CurrentSequence);
+                sequencePersisence.SaveSequence(currentSequence.Path, CurrentSequence.Sequence.Sequence);
             }
-            SaveRequest.Raise(fileNotification, n =>
+            else
             {
-                if (n.Confirmed)
+                SaveRequest.Raise(fileNotification, n =>
                 {
-                    fileEditorService.SaveSequence(RegionNames.SequenceEditorRegion, n.Path, CurrentSequence);
-                }
-            });
+                    if (n.Confirmed)
+                    {
+                        sequencePersisence.SaveSequence(currentSequence.Path, CurrentSequence.Sequence.Sequence);
+                        fileEditorService.UpdateViewNameForSequence(RegionNames.SequenceEditorRegion, n.Path, CurrentSequence);
+                    }
+                }); 
+            }
         }
 
         private void OpenSequence()
@@ -93,7 +99,7 @@ namespace WPLGSS.ViewModels
             {
                 if (n.Confirmed)
                 {
-                    var sequence = fileEditorService.OpenSequenceFromFile(n.Path);
+                    var sequence = sequencePersisence.OpenSequence(n.Path);
                     var viewModel = new SequenceViewModel(configService, sequence);
                     fileEditorService.OpenSequenceInRegion(RegionNames.SequenceEditorRegion, n.Path, viewModel);
                 }

@@ -117,7 +117,9 @@
     <Compile Include="Interactivity\OpenFileAction.cs" />
     <Compile Include="Services\IDataAquisition.cs" />
     <Compile Include="Services\ISequenceEditorService.cs" />
+    <Compile Include="Services\ISequencePersistence.cs" />
     <Compile Include="Services\SequenceEditorService.cs" />
+    <Compile Include="Services\SequencePersistence.cs" />
     <Compile Include="Services\StatusChangedEventArgs.cs" />
     <Compile Include="Utilities\MathEquationParser.cs" />
     <Compile Include="Utilities\TypeTextReader.cs" />

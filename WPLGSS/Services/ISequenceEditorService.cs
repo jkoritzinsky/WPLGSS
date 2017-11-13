@@ -12,8 +12,6 @@ namespace WPLGSS.Services
     {
         void OpenSequenceInRegion(string editorRegion, string path, SequenceViewModel sequence);
 
-        Sequence OpenSequenceFromFile(string path);
-
-        void SaveSequence(string editorRegionName, string path, SequenceFile sequence);
+        void UpdateViewNameForSequence(string editorRegionName, string path, SequenceFile sequence);
     }
 }

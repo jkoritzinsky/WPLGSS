@@ -17,21 +17,18 @@
   </UserControl.Resources>
   <StackPanel>
     <StackPanel Orientation="Horizontal">
+      <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding SaveRequest, Mode=OneWay}">
+          <interactivity:SaveFileAction />
+        </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding OpenRequest, Mode=OneWay}">
+          <interactivity:OpenFileAction />
+        </prism:InteractionRequestTrigger>
+      </i:Interaction.Triggers>
       <Button Content="New Sequence" Command="{Binding NewSequenceCommand}" />
-      <Button Content="Save Sequence" Margin="5,0,0,0" Command="{Binding SaveSequenceCommand}">
-        <i:Interaction.Triggers>
-          <prism:InteractionRequestTrigger SourceObject="{Binding SaveRequest, Mode=OneWay}">
-            <interactivity:SaveFileAction />
-          </prism:InteractionRequestTrigger>
-        </i:Interaction.Triggers>
-      </Button>
-      <Button Content="Open Sequence" Margin="5,0,0,0" Command="{Binding OpenSequenceCommand}">
-        <i:Interaction.Triggers>
-          <prism:InteractionRequestTrigger SourceObject="{Binding OpenRequest, Mode=OneWay}">
-            <interactivity:OpenFileAction />
-          </prism:InteractionRequestTrigger>
-        </i:Interaction.Triggers>
-      </Button>
+      <Button Content="Open" Margin="5,0,0,0" Command="{Binding OpenSequenceCommand}" />
+      <Button Content="Save" Margin="5,0,0,0" Command="{Binding SaveSequenceCommand}" CommandParameter="False" />
+      <Button Content="Save As" Margin="5,0,0,0" Command="{Binding SaveSequenceCommand}" CommandParameter="True" />
     </StackPanel>
     <TabControl prism:RegionManager.RegionName="{x:Static local:RegionNames.SequenceEditorRegion}"
                 ItemContainerStyle="{StaticResource SequenceEditorRegionStyle}"
