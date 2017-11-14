@@ -9,6 +9,6 @@ namespace WPLGSS.Models
 {
     public class Config
     {
-        public ObservableCollection<Channel> Channels { get; set; }
+        public ObservableCollection<Channel> Channels { get; set; } = new ObservableCollection<Channel>();
     }
 }
