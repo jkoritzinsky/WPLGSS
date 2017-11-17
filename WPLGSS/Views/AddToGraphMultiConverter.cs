@@ -13,7 +13,7 @@ namespace WPLGSS.Views
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return Tuple.Create((Channel)values[0], values[1] == null ? -1 : (int)values[1]);
+            return Tuple.Create((InputChannel)values[0], values[1] == null ? -1 : (int)values[1]);
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

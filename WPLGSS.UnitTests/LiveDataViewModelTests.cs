@@ -45,11 +45,11 @@ namespace WPLGSS.ViewModels.UnitTests
 
             var viewModel = new LiveDataViewModel(configService, A.Fake<IDataAquisition>(), eventAggregator);
 
-            var channelGraphTuple = Tuple.Create<Channel, int>(new InputChannel(), 0);
+            var channelGraphTuple = Tuple.Create(new InputChannel(), 0);
 
             viewModel.AddToGraphCommand.Execute(channelGraphTuple);
 
-            A.CallTo(() => addToGraphEvent.Publish(A<(Channel, int)>
+            A.CallTo(() => addToGraphEvent.Publish(A<(InputChannel, int)>
                 .That.Matches(payload =>
                     payload.Item1 == channelGraphTuple.Item1
                     && payload.Item2 == channelGraphTuple.Item2)))
@@ -73,7 +73,7 @@ namespace WPLGSS.ViewModels.UnitTests
 
             var viewModel = new LiveDataViewModel(configService, dataAquisition, A.Fake<IEventAggregator>());
 
-            dataAquisition.ChannelValueUpdated += Raise.With(new ChannelValueUpdatedEventArgs(channel, 2));
+            dataAquisition.ChannelValueUpdated += Raise.With(new ChannelValueUpdatedEventArgs(channel, 2, DateTime.Now));
 
             Assert.Equal(2, viewModel.Channels.First(live => live.Channel == channel).Value);
         }

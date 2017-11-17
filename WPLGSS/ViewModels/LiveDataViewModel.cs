@@ -28,7 +28,7 @@ namespace WPLGSS.ViewModels
             config.ConfigFileLoaded += (o, e) => UpdateLiveChannelsFromConfig(config.Config);
 
             dataAquisition.ChannelValueUpdated += ChannelValueUpdated;
-            AddToGraphCommand = new DelegateCommand<Tuple<Channel, int>>(param =>
+            AddToGraphCommand = new DelegateCommand<Tuple<InputChannel, int>>(param =>
             {
                 eventAggregator.GetEvent<AddToGraphEvent>().Publish((param.Item1, param.Item2));
             });

@@ -13,7 +13,7 @@ using WPLGSS.Models;
 
 namespace WPLGSS.ViewModels
 {
-    class SubsequenceViewModel : BindableBase
+    public class SubsequenceViewModel : BindableBase
     {
         private static readonly DateTime BaseDate = new DateTime(1971, 1, 1); // Use this instead of 1970-1-1 so we don't get an argument out of range when the user is zooming out.
 
