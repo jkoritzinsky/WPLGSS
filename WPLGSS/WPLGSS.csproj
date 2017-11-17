@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LabJack.LJM, Version=1.16.0.0, Culture=neutral, PublicKeyToken=0316e29ba8d40ce0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\LabJack.LJM.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
@@ -111,6 +115,7 @@
     <Compile Include="Models\OutputEvent.cs" />
     <Compile Include="Models\Sequence.cs" />
     <Compile Include="Services\ChannelValueUpdatedEventArgs.cs" />
+    <Compile Include="Services\LabJackGateway.cs" />
     <Compile Include="Services\ConfigService.cs" />
     <Compile Include="Services\DummyDataService.cs" />
     <Compile Include="Services\IConfigService.cs" />
