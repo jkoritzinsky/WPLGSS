@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WPLGSS.ViewModels
 {
-    class GraphCreatedEvent : PubSubEvent<int>
+    public class GraphCreatedEvent : PubSubEvent<int>
     {
     }
 }

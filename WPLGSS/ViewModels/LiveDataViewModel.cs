@@ -18,6 +18,7 @@ namespace WPLGSS.ViewModels
     public class LiveDataViewModel : BindableBase
     {
         private readonly IConfigService config;
+        private readonly IDataAquisition dataAquisition;
 
         [ImportingConstructor]
         public LiveDataViewModel(IConfigService config, IDataAquisition dataAquisition, IEventAggregator eventAggregator)
@@ -32,8 +33,11 @@ namespace WPLGSS.ViewModels
                 eventAggregator.GetEvent<AddToGraphEvent>().Publish((param.Item1, param.Item2));
             });
 
+            SendOutputValueCommand = new DelegateCommand<LiveChannel>(SendOutputValue);
+
             eventAggregator.GetEvent<GraphCreatedEvent>().Subscribe(id => GraphIds.Add(id));
             this.config = config;
+            this.dataAquisition = dataAquisition;
         }
 
         private void UpdateLiveChannelsFromConfig(Config config)
@@ -57,6 +61,11 @@ namespace WPLGSS.ViewModels
             }
         }
 
+        private void SendOutputValue(LiveChannel channel)
+        {
+            dataAquisition.SetChannelValue(channel.Channel, channel.Value);
+        }
+
         private ObservableCollection<LiveChannel> channels = new ObservableCollection<LiveChannel>();
 
         public ObservableCollection<LiveChannel> Channels
@@ -67,6 +76,8 @@ namespace WPLGSS.ViewModels
 
 
         public ICommand AddToGraphCommand { get; }
+
+        public ICommand SendOutputValueCommand { get; }
 
         public ObservableCollection<int> GraphIds { get; } = new ObservableCollection<int> { 0 };
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WPLGSS.Models
 {
-    class AbortCondition : Event
+    public class AbortCondition : Event
     {
         private double thresholdMin;
 

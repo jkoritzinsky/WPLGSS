@@ -13,7 +13,12 @@
         <local:AddToGraphMultiConverter x:Key="AddToGraphMultiConverter" />
         <local:GraphIdConverter x:Key="GraphIdConverter" />
         <DataTemplate x:Key="OutputChannel">
-            <ToggleButton Content="Toggle" IsChecked="{Binding Value, Mode=TwoWay, Converter={StaticResource OutputConverter}}" />
+            <ToggleButton 
+              Content="Toggle"
+              IsChecked="{Binding Value, Mode=TwoWay, Converter={StaticResource OutputConverter}}"
+              Command="{Binding DataContext.SendOutputValueCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LiveDataView}}}"
+              CommandParameter="{Binding}"
+            />
         </DataTemplate>
         <DataTemplate x:Key="InputChannel">
             <StackPanel Orientation="Horizontal">

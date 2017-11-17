@@ -3,7 +3,7 @@ using WPLGSS.Models;
 
 namespace WPLGSS.ViewModels
 {
-    internal class AddToGraphEvent : PubSubEvent<(Channel channel, int graphId)>
+    public class AddToGraphEvent : PubSubEvent<(Channel channel, int graphId)>
     {
     }
 }

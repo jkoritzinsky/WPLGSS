@@ -12,6 +12,8 @@ namespace WPLGSS.Services
     {
         void StartService();
 
+        void SetChannelValue(Channel channel, double value);
+
         event EventHandler<StatusChangedEventArgs> LabJackConnectionChanged;
         event EventHandler<StatusChangedEventArgs> ArduinoConnectionChanged;
         event EventHandler<ChannelValueUpdatedEventArgs> ChannelValueUpdated;

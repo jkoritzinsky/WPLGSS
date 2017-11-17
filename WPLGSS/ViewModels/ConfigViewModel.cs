@@ -105,7 +105,7 @@ namespace WPLGSS.ViewModels
             {
                 if (n.Confirmed)
                 {
-                    configService.SaveConfig(n.Path); 
+                    configService.LoadConfig(n.Path); 
                 }
             });
         }

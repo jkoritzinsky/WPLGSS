@@ -1,4 +1,5 @@
 ﻿using FakeItEasy;
+using Prism.Interactivity.InteractionRequest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -246,6 +247,233 @@ namespace WPLGSS.ViewModels.UnitTests
             };
 
             Assert.False(viewModel.FinishCommand.CanExecute());
+        }
+
+        [Fact]
+        public void StartTimeMustBeNonNegative()
+        {
+            var viewModel = new EventEditorViewModel(fakeConfigService)
+            {
+                StartTime = TimeSpan.FromSeconds(-1)
+            };
+
+            Assert.Single(viewModel.GetErrors(nameof(viewModel.StartTime)));
+        }
+
+        [Fact]
+        public void ExecutingFinishCommandConfirmsNotification()
+        {
+            var configService = A.Fake<IConfigService>();
+            A.CallTo(() => configService.Config).Returns(new Config
+            {
+                Channels =
+                {
+                    new InputChannel
+                    {
+                        Name = "Input"
+                    }
+                }
+            });
+
+            var notification = A.Fake<IConfirmation>();
+
+            var finished = false;
+
+            var viewModel = new EventEditorViewModel(configService)
+            {
+                Type = EventType.Abort,
+                Channel = "Input",
+                StartTime = TimeSpan.Zero,
+                EndTime = TimeSpan.FromSeconds(1),
+                ThresholdMin = 10,
+                ThresholdMax = 20,
+                Notification = notification,
+                FinishInteraction = () => finished = true
+            };
+
+            viewModel.FinishCommand.Execute();
+
+            Assert.True(finished);
+            A.CallToSet(() => notification.Content).MustHaveHappened();
+            Assert.IsType<AbortCondition>(notification.Content);
+
+            var abortCondition = (AbortCondition)notification.Content;
+
+            Assert.Equal("Input", abortCondition.ChannelName);
+            Assert.Equal(TimeSpan.Zero, abortCondition.StartTime);
+            Assert.Equal(TimeSpan.FromSeconds(1), abortCondition.EndTime);
+            Assert.Equal(10, abortCondition.ThresholdMin);
+            Assert.Equal(20, abortCondition.ThresholdMax);
+            
+        }
+
+        [Fact]
+        public void ExecutingCancelCommandDoesConfirmNotification()
+        {
+            var configService = A.Fake<IConfigService>();
+            A.CallTo(() => configService.Config).Returns(new Config
+            {
+                Channels =
+                {
+                    new InputChannel
+                    {
+                        Name = "Input"
+                    }
+                }
+            });
+
+            var notification = A.Fake<IConfirmation>();
+
+            var finished = false;
+
+            var viewModel = new EventEditorViewModel(configService)
+            {
+                Type = EventType.Abort,
+                Channel = "Input",
+                StartTime = TimeSpan.Zero,
+                EndTime = TimeSpan.FromSeconds(1),
+                ThresholdMin = 10,
+                ThresholdMax = 20,
+                Notification = notification,
+                FinishInteraction = () => finished = true
+            };
+
+            viewModel.CancelCommand.Execute(null);
+
+            Assert.True(finished);
+            A.CallToSet(() => notification.Content).MustNotHaveHappened();
+            Assert.False(notification.Confirmed);
+        }
+
+        [Fact]
+        public void CannotDeleteWhenCreatingNewEvent()
+        {
+            var configService = A.Fake<IConfigService>();
+            A.CallTo(() => configService.Config).Returns(new Config());
+
+            var viewModel = new EventEditorViewModel(configService)
+            {
+                Notification = new Notification()
+            };
+
+            Assert.False(viewModel.CanDeleteEvent);
+
+            Assert.False(viewModel.DeleteCommand.CanExecute());
+        }
+
+        [Fact]
+        public void SettingNotificationWithEventLoadsEditorWithEventState_Output()
+        {
+            var configService = A.Fake<IConfigService>();
+            A.CallTo(() => configService.Config).Returns(new Config());
+
+            var outputEvent = new OutputEvent
+            {
+                ChannelName = "Channel",
+                StartTime = TimeSpan.FromSeconds(1),
+                EndTime = TimeSpan.FromSeconds(2)
+            };
+
+            var viewModel = new EventEditorViewModel(configService)
+            {
+                Notification = new Confirmation
+                {
+                    Content = outputEvent
+                }
+            };
+
+            Assert.Equal(outputEvent.ChannelName, viewModel.Channel);
+            Assert.Equal(outputEvent.StartTime, viewModel.StartTime);
+            Assert.Equal(outputEvent.EndTime, viewModel.EndTime);
+            Assert.Equal(EventType.Output, viewModel.Type);
+        }
+
+        [Fact]
+        public void SettingNotificationWithEventLoadsEditorWithEventState_Abort()
+        {
+            var configService = A.Fake<IConfigService>();
+            A.CallTo(() => configService.Config).Returns(new Config());
+
+            var abortCondition = new AbortCondition
+            {
+                ChannelName = "Channel",
+                StartTime = TimeSpan.FromSeconds(1),
+                EndTime = TimeSpan.FromSeconds(2),
+                ThresholdMin = 100,
+                ThresholdMax = 200
+            };
+
+            var viewModel = new EventEditorViewModel(configService)
+            {
+                Notification = new Confirmation
+                {
+                    Content = abortCondition
+                }
+            };
+
+            Assert.Equal(abortCondition.ChannelName, viewModel.Channel);
+            Assert.Equal(abortCondition.StartTime, viewModel.StartTime);
+            Assert.Equal(abortCondition.EndTime, viewModel.EndTime);
+            Assert.Equal(abortCondition.ThresholdMin, viewModel.ThresholdMin);
+            Assert.Equal(abortCondition.ThresholdMax, viewModel.ThresholdMax);
+            Assert.Equal(EventType.Abort, viewModel.Type);
+        }
+
+        [Fact]
+        public void SettingNotificationWithEventCanDeleteEvent()
+        {
+            var configService = A.Fake<IConfigService>();
+            A.CallTo(() => configService.Config).Returns(new Config());
+
+
+            var outputEvent = new OutputEvent
+            {
+                ChannelName = "Channel",
+                StartTime = TimeSpan.FromSeconds(1),
+                EndTime = TimeSpan.FromSeconds(2)
+            };
+
+            var viewModel = new EventEditorViewModel(configService)
+            {
+                Notification = new Confirmation
+                {
+                    Content = outputEvent
+                }
+            };
+
+            Assert.True(viewModel.CanDeleteEvent);
+
+            Assert.True(viewModel.DeleteCommand.CanExecute());
+        }
+
+        [Fact]
+        public void DeleteCommandConfirmsAndSetsNotificationContentToNull()
+        {
+            var configService = A.Fake<IConfigService>();
+            A.CallTo(() => configService.Config).Returns(new Config());
+
+
+            var outputEvent = new OutputEvent
+            {
+                ChannelName = "Channel",
+                StartTime = TimeSpan.FromSeconds(1),
+                EndTime = TimeSpan.FromSeconds(2)
+            };
+
+            var notification = new Confirmation
+            {
+                Content = outputEvent
+            };
+
+            var viewModel = new EventEditorViewModel(configService)
+            {
+                Notification = notification
+            };
+
+            viewModel.DeleteCommand.Execute();
+
+            Assert.True(notification.Confirmed);
+            Assert.Null(notification.Content);
         }
     }
 }

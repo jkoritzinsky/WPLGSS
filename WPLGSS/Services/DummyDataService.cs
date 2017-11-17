@@ -14,6 +14,10 @@ namespace WPLGSS.Services
         public event EventHandler<StatusChangedEventArgs> ArduinoConnectionChanged;
         public event EventHandler<ChannelValueUpdatedEventArgs> ChannelValueUpdated;
 
+        public void SetChannelValue(Channel channel, double value)
+        {
+        }
+
         public void StartService()
         {
             throw new NotImplementedException();
