@@ -17,7 +17,7 @@ using WPLGSS.Services;
 namespace WPLGSS.ViewModels
 {
     [Export]
-    public class ConfigViewModel : BindableBase
+    public class ConfigViewModel : PersistViewModelBase
     {
         private readonly IConfigService configService;
 
@@ -29,8 +29,6 @@ namespace WPLGSS.ViewModels
             UpdateFromUnderlyingConfig(configService.Config);
             AddInputChannelCommand = new DelegateCommand(AddInputChannel);
             AddOutputChannelCommand = new DelegateCommand(AddOutputChannel);
-            SaveConfigCommand = new DelegateCommand(SaveConfig);
-            OpenConfigCommand = new DelegateCommand(OpenConfig);
         }
 
         public string Name => "Configuration";
@@ -65,8 +63,6 @@ namespace WPLGSS.ViewModels
 
         public ICommand AddInputChannelCommand { get; }
         public ICommand AddOutputChannelCommand { get; }
-        public ICommand SaveConfigCommand { get; }
-        public ICommand OpenConfigCommand { get; }
 
         private void AddInputChannel()
         {
@@ -78,36 +74,22 @@ namespace WPLGSS.ViewModels
             configService.Config.Channels.Add(new Channel());
         }
 
-        public InteractionRequest<FileInteractionNotification> SaveRequest { get; } = new InteractionRequest<FileInteractionNotification>();
-
-        public InteractionRequest<FileInteractionNotification> OpenRequest { get; } = new InteractionRequest<FileInteractionNotification>();
-
         private FileInteractionNotification fileNotification = new FileInteractionNotification
         {
             Filter = "WPLGSS Config (*.config)|*.config",
             DefaultExtension = ".config"
         };
 
-        private void SaveConfig()
+        protected override FileInteractionNotification Notification => fileNotification;
+
+        protected override void SaveCore(string path)
         {
-            SaveRequest.Raise(fileNotification, n =>
-            {
-                if (n.Confirmed)
-                {
-                    configService.SaveConfig(n.Path); 
-                }
-            });
+            configService.SaveConfig(path);
         }
 
-        private void OpenConfig()
+        protected override void OpenCore(string path)
         {
-            OpenRequest.Raise(fileNotification, n =>
-            {
-                if (n.Confirmed)
-                {
-                    configService.LoadConfig(n.Path); 
-                }
-            });
+            configService.LoadConfig(path);
         }
 
         private void UpdateFromUnderlyingConfig(Config config)

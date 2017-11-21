@@ -17,7 +17,7 @@ namespace WPLGSS.Utilities
         private bool disposed;
 
         /// <summary>
-        /// Initializes a new <see cref="JKor.IO.TypeTextReader" /> object using the given <see cref="System.IO.TextReader"/> as the base reader.
+        /// Initializes a new <see cref="TypeTextReader" /> object using the given <see cref="System.IO.TextReader"/> as the base reader.
         /// </summary>
         /// <param name="reader">The base reader.</param>
         public TypeTextReader(TextReader reader)
@@ -26,58 +26,17 @@ namespace WPLGSS.Utilities
         }
 
         /// <summary>
-        /// Initalizes a new <see cref="JKor.IO.TypeTextReader" /> object to read from the given stream.
-        /// </summary>
-        /// <param name="stream">The base stream.</param>
-        public TypeTextReader(Stream stream)
-            :this(new StreamReader(stream))
-        {
-
-        }
-
-        /// <summary>
-        /// Initalizes a new <see cref="JKor.IO.TypeTextReader"/> object to read from the given string.
-        /// </summary>
-        /// <param name="s">The base string.</param>
-        public TypeTextReader(string s)
-            :this(new StringReader(s))
-        {
-
-        }
-
-        /// <summary>
-        /// Releases all resources used by the <see cref="JKor.IO.TypeTextReader"/> object.
+        /// Releases all resources used by the <see cref="TypeTextReader"/> object.
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Cleans up the TypeTextReader object.
-        /// </summary>
-        ~TypeTextReader()
-        {
-            Dispose(false);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    BaseReader.Dispose(); 
-                }
-            }
-            disposed = true;
+            BaseReader.Dispose();
         }
 
         /// <summary>
         /// The underlying reader.
         /// </summary>
-        /// <value>The <see cref="System.IO.TextReader"/> object that this <see cref="JKor.IO.TypeTextReader"/> object reads from.</value>
+        /// <value>The <see cref="System.IO.TextReader"/> object that this <see cref="TypeTextReader"/> object reads from.</value>
         public TextReader BaseReader
         {
             get { return underlyingReader; }
@@ -181,22 +140,6 @@ namespace WPLGSS.Utilities
         public double ReadDouble()
         {
             return (double)ReadDecimal();
-        }
-
-        /// <summary>
-        /// Reads until one of the delimeters is found.
-        /// </summary>
-        /// <param name="delimeters">Any possible delimeters to stop reading at.</param>
-        /// <returns>Returns the string read up to the delimeter.</returns>
-        /// <remarks>Does not read the delimiter as well.</remarks>
-        public string ReadToDelimiter(params char[] delimeters)
-        {
-            var builder = new StringBuilder();
-            while (BaseReader.Peek() != -1 && !delimeters.Contains((char)BaseReader.Peek()))
-            {
-                builder.Append((char)BaseReader.Read());
-            }
-            return builder.ToString();
         }
     }
 }

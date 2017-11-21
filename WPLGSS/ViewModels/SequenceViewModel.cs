@@ -14,22 +14,19 @@ namespace WPLGSS.ViewModels
 {
     public class SequenceViewModel
     {
-        private readonly IConfigService config;
-
         public enum Subsequence
         {
             Primary,
             Abort
         }
 
-        public SequenceViewModel(IConfigService config, Sequence sequence)
+        public SequenceViewModel(Sequence sequence)
         {
             Sequence = sequence;
             AddEventCommand = new DelegateCommand<string>(seq =>
                 AddEvent(
                     (Subsequence)Enum.Parse(typeof(Subsequence), seq)),
                     seq => Enum.TryParse<Subsequence>(seq, out _));
-            this.config = config;
         }
 
         private void AddEvent(Subsequence sequence)

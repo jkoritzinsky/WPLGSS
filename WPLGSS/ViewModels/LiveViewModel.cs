@@ -43,7 +43,7 @@ namespace WPLGSS.ViewModels
                 if (n.Confirmed)
                 {
                     var sequence = sequencePersistence.OpenSequence(n.Path);
-                    var viewModel = new SequenceViewModel(configService, sequence);
+                    var viewModel = new SequenceViewModel(sequence);
                     fileEditorService.OpenSequenceInRegion(RegionNames.SequenceRunnerRegion, n.Path, viewModel);
                 }
             });

@@ -118,7 +118,6 @@
     <Compile Include="Services\DataService.cs" />
     <Compile Include="Services\LabJackGateway.cs" />
     <Compile Include="Services\ConfigService.cs" />
-    <Compile Include="Services\DummyDataService.cs" />
     <Compile Include="Services\IConfigService.cs" />
     <Compile Include="Interactivity\OpenFileAction.cs" />
     <Compile Include="Services\IDataAquisition.cs" />
@@ -137,6 +136,7 @@
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\LiveDataViewModel.cs" />
     <Compile Include="Services\SequenceFile.cs" />
+    <Compile Include="ViewModels\PersistViewModelBase.cs" />
     <Compile Include="ViewModels\SequenceManagerViewModel.cs" />
     <Compile Include="ViewModels\SequenceViewModel.cs" />
     <Compile Include="ViewModels\SubsequenceViewModel.cs" />

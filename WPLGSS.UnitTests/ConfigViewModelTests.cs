@@ -174,7 +174,7 @@ namespace WPLGSS.ViewModels.UnitTests
 
             viewModel.SaveRequest.Raised += (o, e) => saveRequestRaised = true;
 
-            viewModel.SaveConfigCommand.Execute(null);
+            viewModel.SaveCommand.Execute(null);
 
             Assert.True(saveRequestRaised);
         }
@@ -198,7 +198,7 @@ namespace WPLGSS.ViewModels.UnitTests
                 e.Callback();
             };
 
-            viewModel.SaveConfigCommand.Execute(null);
+            viewModel.SaveCommand.Execute(null);
 
             A.CallTo(() => configService.SaveConfig(path)).MustHaveHappened();
         }
@@ -215,7 +215,7 @@ namespace WPLGSS.ViewModels.UnitTests
 
             viewModel.OpenRequest.Raised += (o, e) => openRequestRaised = true;
 
-            viewModel.OpenConfigCommand.Execute(null);
+            viewModel.OpenCommand.Execute(null);
 
             Assert.True(openRequestRaised);
         }
@@ -239,7 +239,7 @@ namespace WPLGSS.ViewModels.UnitTests
                 e.Callback();
             };
 
-            viewModel.OpenConfigCommand.Execute(null);
+            viewModel.OpenCommand.Execute(null);
 
             A.CallTo(() => configService.LoadConfig(path)).MustHaveHappened();
         }
