@@ -16,25 +16,40 @@ namespace WPLGSS.ViewModels
     [Export]
     public class LiveViewModel : BindableBase
     {
+        private readonly IDataAquisition dataAquisition;
         private readonly ISequenceEditorService fileEditorService;
         private readonly IConfigService configService;
         private readonly ISequencePersistence sequencePersistence;
 
         [ImportingConstructor]
-        public LiveViewModel(IConfigService configService, ISequencePersistence sequencePersistence, ISequenceEditorService fileEditorService)
+        public LiveViewModel(IConfigService configService, ISequencePersistence sequencePersistence, ISequenceEditorService fileEditorService, IDataAquisition dataAquisition)
         {
             this.sequencePersistence = sequencePersistence;
             this.configService = configService;
             this.fileEditorService = fileEditorService;
 
             OpenSequenceCommand = new DelegateCommand(OpenSequence);
+            StartServiceCommand = new DelegateCommand(StartService);
+            this.dataAquisition = dataAquisition;
         }
 
         public string Name => "Live View";
 
+        public ICommand StartServiceCommand { get; }
+
         public ICommand RunSequenceCommand { get; }
 
         public ICommand OpenSequenceCommand { get; }
+
+        private bool started;
+        private void StartService()
+        {
+            if (!started)
+            {
+                dataAquisition.StartService();
+                started = true;
+            }
+        }
         
         private void OpenSequence()
         {
