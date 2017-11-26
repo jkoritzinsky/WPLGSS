@@ -56,30 +56,6 @@ namespace WPLGSS.ViewModels
                 });
         }
 
-        private static Event CreateEvent(EventEditorViewModel content)
-        {
-            Event evt;
-            switch (content.Type)
-            {
-                case EventType.Output:
-                    evt = new OutputEvent();
-                    break;
-                case EventType.Abort:
-                    evt = new AbortCondition
-                    {
-                        ThresholdMin = content.ThresholdMin,
-                        ThresholdMax = content.ThresholdMax
-                    };
-                    break;
-                default:
-                    throw new InvalidOperationException("Invalid event type");
-            }
-            evt.StartTime = content.StartTime;
-            evt.EndTime = content.EndTime;
-            evt.ChannelName = content.Channel;
-            return evt;
-        }
-
         public Sequence Sequence { get; }
         public ICommand AddEventCommand { get; }
         public InteractionRequest<Confirmation> CreateEventRequest { get; } = new InteractionRequest<Confirmation>();

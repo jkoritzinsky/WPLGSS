@@ -18,14 +18,12 @@ namespace WPLGSS.ViewModels
     {
         private readonly IDataAquisition dataAquisition;
         private readonly ISequenceEditorService fileEditorService;
-        private readonly IConfigService configService;
         private readonly ISequencePersistence sequencePersistence;
 
         [ImportingConstructor]
-        public LiveViewModel(IConfigService configService, ISequencePersistence sequencePersistence, ISequenceEditorService fileEditorService, IDataAquisition dataAquisition)
+        public LiveViewModel(ISequencePersistence sequencePersistence, ISequenceEditorService fileEditorService, IDataAquisition dataAquisition)
         {
             this.sequencePersistence = sequencePersistence;
-            this.configService = configService;
             this.fileEditorService = fileEditorService;
 
             OpenSequenceCommand = new DelegateCommand(OpenSequence);

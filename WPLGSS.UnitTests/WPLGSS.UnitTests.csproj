@@ -44,11 +44,15 @@
     <Compile Include="ConfigViewModelTests.cs" />
     <Compile Include="EventEditorViewModelTests.cs" />
     <Compile Include="GraphsViewModelTests.cs" />
+    <Compile Include="HomeViewModelTests.cs" />
     <Compile Include="LiveDataViewModelTests.cs" />
+    <Compile Include="LiveViewModelTests.cs" />
     <Compile Include="MathEquationParser.cs" />
     <Compile Include="PersistViewModelBaseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SequenceEditorServiceTests.cs" />
     <Compile Include="SequenceManagerViewModelTests.cs" />
+    <Compile Include="SequenceViewModelTests.cs" />
     <Compile Include="SubsequenceViewModelTests.cs" />
     <Compile Include="TypeTextReader.cs" />
   </ItemGroup>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WPLGSS.Models
 {
-    public class Event : BindableBase
+    public class Event : BindableBase, IEquatable<Event>
     {
         private TimeSpan startTime;
 
@@ -31,6 +31,16 @@ namespace WPLGSS.Models
         {
             get { return channelName; }
             set { SetProperty(ref channelName, value); }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Event evt && Equals(evt);
+        }
+
+        public virtual bool Equals(Event other)
+        {
+            return StartTime == other.StartTime && EndTime == other.EndTime && ChannelName == other.ChannelName;
         }
     }
 }
