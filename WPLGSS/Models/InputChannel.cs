@@ -13,7 +13,6 @@ namespace WPLGSS.Models
         private static readonly MathEquationParser equationParser = new MathEquationParser();
 
         private string scaling;
-        public double value;
 
         public string Scaling
         {

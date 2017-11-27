@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigViewModelTests.cs" />
+    <Compile Include="DataServiceTests.cs" />
     <Compile Include="LabJackGatewayTests.cs" />
     <Compile Include="EventEditorViewModelTests.cs" />
     <Compile Include="GraphsViewModelTests.cs" />

@@ -7,15 +7,18 @@ using System.Threading.Tasks;
 using System.Threading;
 using WPLGSS.Models;
 using System.IO;
+using System.Collections.Concurrent;
 
 namespace WPLGSS.Services
 {
     [Export(typeof(IDataAquisition))]
-    public class DataService : IDataAquisition
+    public class DataService : IDataAquisition, IDisposable
     {
         public event EventHandler<StatusChangedEventArgs> LabJackConnectionChanged;
         public event EventHandler<StatusChangedEventArgs> ArduinoConnectionChanged;
         public event EventHandler<ChannelValueUpdatedEventArgs> ChannelValueUpdated;
+
+        public ConcurrentDictionary<InputChannel, double> ChannelValues { get; } = new ConcurrentDictionary<InputChannel, double>();
 
         private ILabJackGateway LJ;
         private System.Timers.Timer SampleTimer;
@@ -44,19 +47,30 @@ namespace WPLGSS.Services
 
             if (LJ.LastError != LabJack.LJM.LJMERROR.NOERROR)
             {
-                SynchronizationContext.Current.Post(_ => {
+                SendOrPostCallback eventCallback = _ => {
+                    ChannelValues.Clear();
                     foreach (var chan in config.Config.Channels)
                     {
                         if (chan is InputChannel input && chan.Source == ChannelSource.LabJack)
                         {
-                            (chan as InputChannel).value = input.ScalingFunction(dataIn[input.ChannelId]);
+                            double value = input.ScalingFunction(dataIn[input.ChannelId]);
+                            ChannelValues[input] = value;
                             ChannelValueUpdated?.Invoke(
                                 this,
-                                new ChannelValueUpdatedEventArgs(chan, (chan as InputChannel).value, SampleTime)
+                                new ChannelValueUpdatedEventArgs(chan, value, SampleTime)
                             );
                         }
                     }
-                }, null);
+                };
+
+                if (SynchronizationContext.Current != null)
+                {
+                    SynchronizationContext.Current.Post(eventCallback, null); 
+                }
+                else
+                {
+                    eventCallback(null);
+                }
             }
 
             if (recording)
@@ -65,7 +79,7 @@ namespace WPLGSS.Services
                 foreach (var chan in config.Config.Channels)
                 {
                     if (chan is InputChannel input && chan.Source == ChannelSource.LabJack)
-                        recStream.Write("\t" + (chan as InputChannel).value);
+                        recStream.Write("\t" + ChannelValues[input]);
                 }
                 recStream.WriteLine();
             }
@@ -116,6 +130,12 @@ namespace WPLGSS.Services
         {
             if (value == 0) dataOut[channel.ChannelId] = 0;
             if (value == 1) dataOut[channel.ChannelId] = 12;
+        }
+
+        public void Dispose()
+        {
+            SampleTimer.Stop();
+            SampleTimer.Dispose();
         }
     }
 }

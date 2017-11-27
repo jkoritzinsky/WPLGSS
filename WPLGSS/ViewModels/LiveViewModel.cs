@@ -28,7 +28,7 @@ namespace WPLGSS.ViewModels
             this.fileEditorService = fileEditorService;
 
             OpenSequenceCommand = new DelegateCommand(OpenSequence);
-            //StartServiceCommand = new DelegateCommand(StartService);
+            StartServiceCommand = new DelegateCommand(StartService);
             StartStopRecCommand = new DelegateCommand(StartStopRecord);
             RunSequenceCommand = new DelegateCommand<Sequence>(runner.RunSequence);
             this.dataAquisition = dataAquisition;
