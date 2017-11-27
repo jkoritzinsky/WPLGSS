@@ -70,8 +70,16 @@ namespace WPLGSS.ViewModels
         {
             if (!started)
             {
-                dataAquisition.StartService();
-                started = true;
+
+                try
+                {
+                    dataAquisition.StartService();
+                    started = true;
+                }
+                catch (Exception)
+                {
+                    // Failed To Start service. Will try again when re-loaded.
+                }
             }
         }
         
