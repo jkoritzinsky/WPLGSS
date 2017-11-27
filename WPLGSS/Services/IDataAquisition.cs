@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -20,5 +21,7 @@ namespace WPLGSS.Services
         event EventHandler<StatusChangedEventArgs> LabJackConnectionChanged;
         event EventHandler<StatusChangedEventArgs> ArduinoConnectionChanged;
         event EventHandler<ChannelValueUpdatedEventArgs> ChannelValueUpdated;
+
+        ConcurrentDictionary<InputChannel, double> ChannelValues { get; }
     }
 }
