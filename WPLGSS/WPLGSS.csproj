@@ -64,6 +64,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -136,6 +137,7 @@
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\LiveDataViewModel.cs" />
     <Compile Include="Services\SequenceFile.cs" />
+    <Compile Include="ViewModels\SchematicViewModel.cs" />
     <Compile Include="ViewModels\PersistViewModelBase.cs" />
     <Compile Include="ViewModels\SequenceManagerViewModel.cs" />
     <Compile Include="ViewModels\SequenceViewModel.cs" />
@@ -159,6 +161,9 @@
     </Compile>
     <Compile Include="Views\Inverter.cs" />
     <Compile Include="Views\LiveDataSelector.cs" />
+    <Compile Include="Views\SchematicView.xaml.cs">
+      <DependentUpon>SchematicView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\LiveDataView.xaml.cs">
       <DependentUpon>LiveDataView.xaml</DependentUpon>
     </Compile>
@@ -188,6 +193,10 @@
     <Page Include="Views\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SchematicView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\LiveDataView.xaml">
       <SubType>Designer</SubType>
@@ -256,6 +265,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Views\WPL_PID.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
