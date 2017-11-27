@@ -23,7 +23,8 @@
   </UserControl.Resources>
   <DockPanel>
     <DockPanel Dock="Top">
-      <ToggleButton Content="Record" DockPanel.Dock="Right" VerticalAlignment="Top" HorizontalAlignment="Right"  />
+            <ToggleButton Content="Record" Command="{Binding StartStopRecCommand}" 
+                          DockPanel.Dock="Right" VerticalAlignment="Top" HorizontalAlignment="Right"  />
       <ContentControl prism:RegionManager.RegionName="{x:Static local:RegionNames.GraphRegion}" />
     </DockPanel>
     <StackPanel DockPanel.Dock="Bottom">

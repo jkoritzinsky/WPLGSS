@@ -28,6 +28,7 @@ namespace WPLGSS.ViewModels
 
             OpenSequenceCommand = new DelegateCommand(OpenSequence);
             StartServiceCommand = new DelegateCommand(StartService);
+            StartStopRecCommand = new DelegateCommand(StartStopRecord);
             this.dataAquisition = dataAquisition;
         }
 
@@ -38,6 +39,7 @@ namespace WPLGSS.ViewModels
         public ICommand RunSequenceCommand { get; }
 
         public ICommand OpenSequenceCommand { get; }
+        public ICommand StartStopRecCommand { get; }
 
         private bool started;
         private void StartService()
@@ -62,6 +64,11 @@ namespace WPLGSS.ViewModels
             });
         }
         
+        private void StartStopRecord()
+        {
+            dataAquisition.StartStopRecord();
+        }
+
         public InteractionRequest<FileInteractionNotification> OpenRequest { get; } = new InteractionRequest<FileInteractionNotification>();
         
         private FileInteractionNotification fileNotification = new FileInteractionNotification
