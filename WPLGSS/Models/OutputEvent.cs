@@ -8,5 +8,9 @@ namespace WPLGSS.Models
 {
     public class OutputEvent : Event
     {
+        public override bool Equals(Event other)
+        {
+            return other is OutputEvent && base.Equals(other);
+        }
     }
 }

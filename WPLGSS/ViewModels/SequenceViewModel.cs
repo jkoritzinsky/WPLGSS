@@ -14,22 +14,19 @@ namespace WPLGSS.ViewModels
 {
     public class SequenceViewModel
     {
-        private readonly IConfigService config;
-
         public enum Subsequence
         {
             Primary,
             Abort
         }
 
-        public SequenceViewModel(IConfigService config, Sequence sequence)
+        public SequenceViewModel(Sequence sequence)
         {
             Sequence = sequence;
             AddEventCommand = new DelegateCommand<string>(seq =>
                 AddEvent(
                     (Subsequence)Enum.Parse(typeof(Subsequence), seq)),
                     seq => Enum.TryParse<Subsequence>(seq, out _));
-            this.config = config;
         }
 
         private void AddEvent(Subsequence sequence)
@@ -57,30 +54,6 @@ namespace WPLGSS.ViewModels
                         }
                     }
                 });
-        }
-
-        private static Event CreateEvent(EventEditorViewModel content)
-        {
-            Event evt;
-            switch (content.Type)
-            {
-                case EventType.Output:
-                    evt = new OutputEvent();
-                    break;
-                case EventType.Abort:
-                    evt = new AbortCondition
-                    {
-                        ThresholdMin = content.ThresholdMin,
-                        ThresholdMax = content.ThresholdMax
-                    };
-                    break;
-                default:
-                    throw new InvalidOperationException("Invalid event type");
-            }
-            evt.StartTime = content.StartTime;
-            evt.EndTime = content.EndTime;
-            evt.ChannelName = content.Channel;
-            return evt;
         }
 
         public Sequence Sequence { get; }

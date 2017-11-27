@@ -475,5 +475,55 @@ namespace WPLGSS.ViewModels.UnitTests
             Assert.True(notification.Confirmed);
             Assert.Null(notification.Content);
         }
+
+
+        public static readonly List<object[]> EventCreationData =
+            new List<object[]>
+        {
+            new object[]{
+                new EventEditorViewModel(A.Fake<IConfigService>())
+                {
+                    Type = EventType.Output,
+                    Channel = "Test",
+                    StartTime = TimeSpan.Zero,
+                    EndTime = TimeSpan.FromSeconds(1),
+                    Notification = new Confirmation()
+                },
+                new OutputEvent
+                {
+                    ChannelName = "Test",
+                    StartTime = TimeSpan.Zero,
+                    EndTime = TimeSpan.FromSeconds(1),
+                }
+            },
+            new object[]{
+                new EventEditorViewModel(A.Fake<IConfigService>())
+                {
+                    Type = EventType.Abort,
+                    Channel = "Test",
+                    StartTime = TimeSpan.Zero,
+                    EndTime = TimeSpan.FromSeconds(1),
+                    ThresholdMin = 10,
+                    ThresholdMax = 20,
+                    Notification = new Confirmation()
+                },
+                new AbortCondition
+                {
+                    ChannelName = "Test",
+                    StartTime = TimeSpan.Zero,
+                    EndTime = TimeSpan.FromSeconds(1),
+                    ThresholdMin = 10,
+                    ThresholdMax = 20
+                }
+            }
+        };
+
+        [Theory]
+        [MemberData(nameof(EventCreationData))]
+        public void EventCreation(EventEditorViewModel model, Event result)
+        {
+            model.FinishCommand.Execute();
+            Assert.Equal(result, model.Notification.Content);
+        }
     }
 }

@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="WPLGSS.Views.SchematicView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WPLGSS.Views"
+             mc:Ignorable="d" 
+
+             x:Name="LiveData">
+
+    <Viewbox>
+        <Grid Name="SchematicGrid">
+            <Image Source="WPL_PID.png" Panel.ZIndex="1" />
+            <TextBlock Name="Txt_TT08" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1460,619,803.2,795.4" />
+
+            <Button Name="Btn_4PV1" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Margin="1118,646,1145.2,768.4" />
+            <Button Name="Btn_4PV2" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Margin="1718,645,545.2,769.4" />
+            <Button x:Name="Btn_5PV3" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Margin="1556,496,707.2,918.4" />
+            <Button x:Name="Btn_5PV2" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Margin="1339,499,924.2,915.4"  />
+            <Button x:Name="Btn_5PV1" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Margin="1073,384,1190.2,1030.4"/>
+            <Button x:Name="Btn_1PV1" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Margin="649,243,1614.2,1171.4" />
+            <Button x:Name="Btn_1PV2" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Margin="1556,136,707.2,1278.4" />
+            <Button x:Name="Btn_2PV1" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Margin="1113,1017,1150.2,397.4" />
+            <Button x:Name="Btn_2PV2" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Margin="1728,1018,535.2,396.4" />
+            <Button x:Name="Btn_3PV3" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Margin="1550,1181,713.2,233.4" />
+            <Button x:Name="Btn_3PV2" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Margin="1367,1180,896.2,234.4" />
+            <Button x:Name="Btn_1PV4" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Margin="1580,1416,683.2,-1.6" />
+            <Button x:Name="Btn_3PV1" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Margin="973,1274,1290.2,140.4" />
+            <Button x:Name="Btn_1PV3" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Margin="649,719,1614.2,695.4" />
+            <TextBlock x:Name="Txt_PT10" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1642,619,621.2,795.4" />
+            <TextBlock x:Name="Txt_TT07" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1474,993,789.2,421.4" />
+            <TextBlock x:Name="Txt_PT09" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1655,993,608.2,421.4" />
+            <TextBlock x:Name="Txt_PT03" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="996,619,1267.2,795.4" />
+            <TextBlock x:Name="Txt_PT06" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="996,993,1267.2,421.4" />
+            <TextBlock x:Name="Txt_TT05" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="737,933,1526.2,481.4" />
+            <TextBlock x:Name="Txt_TT04" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="737,850,1526.2,564.4" />
+            <TextBlock x:Name="Txt_TT01" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="729,460,1534.2,954.4" />
+            <TextBlock x:Name="Txt_TT02" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="729,540,1534.2,874.4" />
+
+        </Grid>
+
+    </Viewbox>
+</UserControl>

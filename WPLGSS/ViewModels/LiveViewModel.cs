@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WPLGSS.Interactivity;
+using WPLGSS.Models;
 using WPLGSS.Services;
 
 namespace WPLGSS.ViewModels
@@ -16,25 +17,54 @@ namespace WPLGSS.ViewModels
     [Export]
     public class LiveViewModel : BindableBase
     {
+        private readonly IDataAquisition dataAquisition;
         private readonly ISequenceEditorService fileEditorService;
-        private readonly IConfigService configService;
         private readonly ISequencePersistence sequencePersistence;
 
         [ImportingConstructor]
-        public LiveViewModel(IConfigService configService, ISequencePersistence sequencePersistence, ISequenceEditorService fileEditorService)
+        public LiveViewModel(ISequenceRunner runner, ISequencePersistence sequencePersistence, ISequenceEditorService fileEditorService, IDataAquisition dataAquisition)
         {
             this.sequencePersistence = sequencePersistence;
-            this.configService = configService;
             this.fileEditorService = fileEditorService;
 
             OpenSequenceCommand = new DelegateCommand(OpenSequence);
+            //StartServiceCommand = new DelegateCommand(StartService);
+            StartStopRecCommand = new DelegateCommand(StartStopRecord);
+            RunSequenceCommand = new DelegateCommand<Sequence>(runner.RunSequence);
+            this.dataAquisition = dataAquisition;
         }
 
         public string Name => "Live View";
 
+        public ICommand StartServiceCommand { get; }
+
         public ICommand RunSequenceCommand { get; }
 
         public ICommand OpenSequenceCommand { get; }
+        public ICommand StartStopRecCommand { get; }
+
+        private SequenceFile currentSequence;
+        public SequenceFile CurrentSequence
+        {
+            get
+            {
+                return currentSequence;
+            }
+            set
+            {
+                SetProperty(ref currentSequence, value);
+            }
+        }
+
+        private bool started;
+        private void StartService()
+        {
+            if (!started)
+            {
+                dataAquisition.StartService();
+                started = true;
+            }
+        }
         
         private void OpenSequence()
         {
@@ -43,12 +73,17 @@ namespace WPLGSS.ViewModels
                 if (n.Confirmed)
                 {
                     var sequence = sequencePersistence.OpenSequence(n.Path);
-                    var viewModel = new SequenceViewModel(configService, sequence);
+                    var viewModel = new SequenceViewModel(sequence);
                     fileEditorService.OpenSequenceInRegion(RegionNames.SequenceRunnerRegion, n.Path, viewModel);
                 }
             });
         }
         
+        private void StartStopRecord()
+        {
+            dataAquisition.StartStopRecord();
+        }
+
         public InteractionRequest<FileInteractionNotification> OpenRequest { get; } = new InteractionRequest<FileInteractionNotification>();
         
         private FileInteractionNotification fileNotification = new FileInteractionNotification

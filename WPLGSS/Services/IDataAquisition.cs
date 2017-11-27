@@ -12,6 +12,8 @@ namespace WPLGSS.Services
     {
         void StartService();
 
+        void StartStopRecord();
+
         void SetChannelValue(Channel channel, double value);
 
         event EventHandler<StatusChangedEventArgs> LabJackConnectionChanged;

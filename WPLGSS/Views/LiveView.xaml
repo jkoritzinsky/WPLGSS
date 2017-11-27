@@ -10,6 +10,11 @@
              xmlns:interactivity="clr-namespace:WPLGSS.Interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+  <i:Interaction.Triggers>
+    <i:EventTrigger EventName="Loaded">
+      <i:InvokeCommandAction Command="{Binding StartServiceCommand}" />
+    </i:EventTrigger>
+  </i:Interaction.Triggers>
   <UserControl.Resources>
     <Style TargetType="{x:Type TabItem}" x:Key="SequenceViewerRegionStyle">
       <Setter Property="Header" Value="{Binding Sequence.Sequence.Name}" />
@@ -18,7 +23,8 @@
   </UserControl.Resources>
   <DockPanel>
     <DockPanel Dock="Top">
-      <ToggleButton Content="Record" DockPanel.Dock="Right" VerticalAlignment="Top" HorizontalAlignment="Right"  />
+            <ToggleButton Content="Record" Command="{Binding StartStopRecCommand}" 
+                          DockPanel.Dock="Right" VerticalAlignment="Top" HorizontalAlignment="Right"  />
       <ContentControl prism:RegionManager.RegionName="{x:Static local:RegionNames.GraphRegion}" />
     </DockPanel>
     <StackPanel DockPanel.Dock="Bottom">
@@ -33,14 +39,13 @@
       </StackPanel>
       <TabControl prism:RegionManager.RegionName="{x:Static local:RegionNames.SequenceRunnerRegion}"
                 ItemContainerStyle="{StaticResource SequenceViewerRegionStyle}"
-                SelectedItem="{Binding CurrentSequence}"
                 MinHeight="150"
       >
         <TabControl.ContentTemplate>
           <DataTemplate>
             <StackPanel Orientation="Horizontal">
-              <Button Command="{Binding DataContext.RunSequence, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type views:LiveView}}}"
-                      CommandParameter="{Binding}">
+              <Button Command="{Binding DataContext.RunSequenceCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type views:LiveView}}}"
+                      CommandParameter="{Binding Sequence.Sequence}">
                 <Path Fill="Green" Data="M 5,0 L 5,50 L 50,25 Z" />
               </Button>
               <StackPanel Orientation="Vertical">

@@ -21,14 +21,14 @@
         <DockPanel DockPanel.Dock="Top">
             <Button DockPanel.Dock="Left" HorizontalAlignment="Left" Content="Create New Input Channel" VerticalAlignment="Top" Command="{Binding AddInputChannelCommand}" />
             <Button DockPanel.Dock="Left" HorizontalAlignment="Left" Margin="5,0,0,0" Content="Create New Output Channel" VerticalAlignment="Top" Command="{Binding AddOutputChannelCommand}" />
-            <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Content="Save Config" Command="{Binding SaveConfigCommand}">
+            <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Content="Save Config" Command="{Binding SaveCommand}">
                 <i:Interaction.Triggers>
                     <prism:InteractionRequestTrigger SourceObject="{Binding SaveRequest, Mode=OneWay}">
                         <interactivity:SaveFileAction />
                     </prism:InteractionRequestTrigger>
                 </i:Interaction.Triggers>
             </Button>
-            <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0" Content="Open Config" Command="{Binding OpenConfigCommand}">
+            <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0" Content="Open Config" Command="{Binding OpenCommand}">
                 <i:Interaction.Triggers>
                     <prism:InteractionRequestTrigger SourceObject="{Binding OpenRequest, Mode=OneWay}">
                         <interactivity:OpenFileAction />

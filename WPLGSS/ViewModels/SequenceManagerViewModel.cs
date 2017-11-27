@@ -17,27 +17,23 @@ using WPLGSS.Services;
 namespace WPLGSS.ViewModels
 {
     [Export]
-    public class SequenceManagerViewModel : BindableBase
+    public class SequenceManagerViewModel : PersistViewModelBase
     {
-        private const string NewSequenceName = "New Sequence";
-        private readonly IConfigService configService;
+        public const string NewSequenceName = "New Sequence";
         private readonly ISequenceEditorService fileEditorService;
         private readonly ISequencePersistence sequencePersistence;
 
         [ImportingConstructor]
-        public SequenceManagerViewModel(IConfigService configService, ISequenceEditorService fileEditorService, ISequencePersistence sequencePersisence)
+        public SequenceManagerViewModel(ISequenceEditorService fileEditorService, ISequencePersistence sequencePersistence)
         {
             NewSequenceCommand = new DelegateCommand(() =>
                 fileEditorService.OpenSequenceInRegion(
                     RegionNames.SequenceEditorRegion,
                     NewSequenceName,
-                    new SequenceViewModel(configService,
-                        new Sequence())));
-            OpenSequenceCommand = new DelegateCommand(OpenSequence);
+                    new SequenceViewModel(new Sequence())));
             SaveSequenceCommand = new DelegateCommand<string>(str => SaveSequence(str != null ? Convert.ToBoolean(str) : false), _ => CurrentSequence != null);
-            this.configService = configService;
             this.fileEditorService = fileEditorService;
-            this.sequencePersistence = sequencePersisence;
+            this.sequencePersistence = sequencePersistence;
         }
 
         public string Name => "Sequence Manager";
@@ -60,19 +56,17 @@ namespace WPLGSS.ViewModels
             }
         }
 
-        public DelegateCommand<string> SaveSequenceCommand { get; }
+        private DelegateCommand<string> SaveSequenceCommand { get; }
 
-        public ICommand OpenSequenceCommand { get; }
-
-        public InteractionRequest<FileInteractionNotification> OpenRequest { get; } = new InteractionRequest<FileInteractionNotification>();
-
-        public InteractionRequest<FileInteractionNotification> SaveRequest { get; } = new InteractionRequest<FileInteractionNotification>();
+        public override ICommand SaveCommand => SaveSequenceCommand;
 
         private FileInteractionNotification fileNotification = new FileInteractionNotification
         {
             Filter = "WPLGSS Sequence (*.seq.yaml)|*.seq.yaml",
             DefaultExtension = ".seq.yaml"
         };
+
+        protected override FileInteractionNotification Notification => fileNotification;
 
         private void SaveSequence(bool saveAs)
         {
@@ -82,28 +76,21 @@ namespace WPLGSS.ViewModels
             }
             else
             {
-                SaveRequest.Raise(fileNotification, n =>
-                {
-                    if (n.Confirmed)
-                    {
-                        sequencePersistence.SaveSequence(currentSequence.Path, CurrentSequence.Sequence.Sequence);
-                        fileEditorService.UpdateViewNameForSequence(RegionNames.SequenceEditorRegion, n.Path, CurrentSequence);
-                    }
-                }); 
+                Save();
             }
         }
 
-        private void OpenSequence()
+        protected override void SaveCore(string path)
         {
-            OpenRequest.Raise(fileNotification, n =>
-            {
-                if (n.Confirmed)
-                {
-                    var sequence = sequencePersistence.OpenSequence(n.Path);
-                    var viewModel = new SequenceViewModel(configService, sequence);
-                    fileEditorService.OpenSequenceInRegion(RegionNames.SequenceEditorRegion, n.Path, viewModel);
-                }
-            });
+            sequencePersistence.SaveSequence(path, CurrentSequence.Sequence.Sequence);
+            fileEditorService.UpdateViewNameForSequence(RegionNames.SequenceEditorRegion, path, CurrentSequence);
+        }
+
+        protected override void OpenCore(string path)
+        {
+            var sequence = sequencePersistence.OpenSequence(path);
+            var viewModel = new SequenceViewModel(sequence);
+            fileEditorService.OpenSequenceInRegion(RegionNames.SequenceEditorRegion, path, viewModel);
         }
     }
 }

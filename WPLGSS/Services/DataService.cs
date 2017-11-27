@@ -20,6 +20,10 @@ namespace WPLGSS.Services
         private System.Timers.Timer SampleTimer;
         private IConfigService config;
 
+        bool recording = false;
+        System.IO.StreamWriter recStream;
+        DateTime startRecTime;
+
         private double[] dataIn;
         private double[] dataOut;
 
@@ -29,6 +33,7 @@ namespace WPLGSS.Services
             this.config = config;
         }
 
+        double tmp;
         private void Sample(object source, System.Timers.ElapsedEventArgs e)
         {
             LJ.SetAnalogData(dataOut);
@@ -48,14 +53,63 @@ namespace WPLGSS.Services
                 {
                     if (chan is InputChannel input && chan.Source == ChannelSource.LabJack)
                     {
+                        (chan as InputChannel).value = input.ScalingFunction(dataIn[input.ChannelId]);
                         ChannelValueUpdated?.Invoke(
                             this,
-                            new ChannelValueUpdatedEventArgs(chan, input.ScalingFunction(dataIn[input.ChannelId]), SampleTime)
+                            new ChannelValueUpdatedEventArgs(chan, (chan as InputChannel).value, SampleTime)
                         );
                     }
                 }
             }, null);
 
+            if (recording)
+            {
+                recStream.Write((DateTime.Now - startRecTime).TotalMilliseconds);
+                foreach (var chan in config.Config.Channels)
+                {
+                    if (chan is InputChannel input && chan.Source == ChannelSource.LabJack)
+                        recStream.Write("\t" + (chan as InputChannel).value);
+                }
+                recStream.WriteLine();
+            }
+            else
+            {
+                if (recStream != null)
+                {
+                    recStream.Close();
+                    recStream.Dispose();
+                    recStream = null;
+                }
+            }
+        }
+
+        public void StartStopRecord()
+        {
+            if (!recording)
+            {
+                if (recStream == null)
+                {
+                    System.Windows.Forms.SaveFileDialog saveFileDialog1
+                        = new System.Windows.Forms.SaveFileDialog();
+
+                    saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+
+                    if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        recStream = new System.IO.StreamWriter(saveFileDialog1.FileName);
+                        foreach (Channel ch in config.Config.Channels)
+                        {
+                            if (ch is InputChannel input && ch.Source == ChannelSource.LabJack)
+                                recStream.Write("\t" + ch.Name);
+                        }
+
+                        recStream.WriteLine();
+                        startRecTime = DateTime.Now;
+                    }
+                }
+            }
+
+            recording = !recording;
         }
 
         public void StartService()

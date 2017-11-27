@@ -23,5 +23,10 @@ namespace WPLGSS.Models
             get { return thresholdMax; }
             set { SetProperty(ref thresholdMax, value); }
         }
+
+        public override bool Equals(Event other)
+        {
+            return other is AbortCondition cond && ThresholdMin == cond.ThresholdMin && ThresholdMax == cond.ThresholdMax && base.Equals(other);
+        }
     }
 }

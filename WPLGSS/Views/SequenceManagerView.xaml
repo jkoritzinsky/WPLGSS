@@ -26,9 +26,9 @@
         </prism:InteractionRequestTrigger>
       </i:Interaction.Triggers>
       <Button Content="New Sequence" Command="{Binding NewSequenceCommand}" />
-      <Button Content="Open" Margin="5,0,0,0" Command="{Binding OpenSequenceCommand}" />
-      <Button Content="Save" Margin="5,0,0,0" Command="{Binding SaveSequenceCommand}" CommandParameter="False" />
-      <Button Content="Save As" Margin="5,0,0,0" Command="{Binding SaveSequenceCommand}" CommandParameter="True" />
+      <Button Content="Open" Margin="5,0,0,0" Command="{Binding OpenCommand}" />
+      <Button Content="Save" Margin="5,0,0,0" Command="{Binding SaveCommand}" CommandParameter="False" />
+      <Button Content="Save As" Margin="5,0,0,0" Command="{Binding SaveCommand}" CommandParameter="True" />
     </StackPanel>
     <TabControl prism:RegionManager.RegionName="{x:Static local:RegionNames.SequenceEditorRegion}"
                 ItemContainerStyle="{StaticResource SequenceEditorRegionStyle}"
