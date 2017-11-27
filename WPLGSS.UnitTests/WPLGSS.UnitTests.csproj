@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LabJack.LJM, Version=1.16.0.0, Culture=neutral, PublicKeyToken=0316e29ba8d40ce0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\LabJack.LJM.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigViewModelTests.cs" />
+    <Compile Include="DataServiceTests.cs" />
     <Compile Include="EventEditorViewModelTests.cs" />
     <Compile Include="GraphsViewModelTests.cs" />
     <Compile Include="HomeViewModelTests.cs" />
