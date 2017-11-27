@@ -40,5 +40,13 @@ namespace WPLGSS.ViewModels.UnitTests
             Assert.Single(seq);
             Assert.Same(evt, seq.First());
         }
+
+        [Fact]
+        public void CannotAddEventToInvalidSubsequence()
+        {
+            var viewModel = new SequenceViewModel(new Sequence());
+
+            Assert.False(viewModel.AddEventCommand.CanExecute("Invalid"));
+        }
     }
 }
