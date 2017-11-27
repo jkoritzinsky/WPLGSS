@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using WPLGSS.Models;
+using System.IO;
 
 namespace WPLGSS.Services
 {
@@ -16,7 +17,7 @@ namespace WPLGSS.Services
         public event EventHandler<StatusChangedEventArgs> ArduinoConnectionChanged;
         public event EventHandler<ChannelValueUpdatedEventArgs> ChannelValueUpdated;
 
-        private LabJackGateway LJ = new LabJackGateway();
+        private ILabJackGateway LJ;
         private System.Timers.Timer SampleTimer;
         private IConfigService config;
 
@@ -28,12 +29,12 @@ namespace WPLGSS.Services
         private double[] dataOut;
 
         [ImportingConstructor]
-        public DataService(IConfigService config)
+        public DataService(IConfigService config, ILabJackGateway lj)
         {
             this.config = config;
+            LJ = lj;
         }
 
-        double tmp;
         private void Sample(object source, System.Timers.ElapsedEventArgs e)
         {
             LJ.SetAnalogData(dataOut);
@@ -41,7 +42,7 @@ namespace WPLGSS.Services
 
             DateTime SampleTime = DateTime.Now;
 
-            if (LJ.ret != LabJack.LJM.LJMERROR.NOERROR)
+            if (LJ.LastError != LabJack.LJM.LJMERROR.NOERROR)
             {
                 SynchronizationContext.Current.Post(_ => {
                     foreach (var chan in config.Config.Channels)
@@ -79,30 +80,19 @@ namespace WPLGSS.Services
             }
         }
 
-        public void StartStopRecord()
+        public void StartStopRecord(string path)
         {
             if (!recording)
             {
-                if (recStream == null)
+                recStream = new StreamWriter(File.OpenWrite(path));
+                foreach (Channel ch in config.Config.Channels)
                 {
-                    System.Windows.Forms.SaveFileDialog saveFileDialog1
-                        = new System.Windows.Forms.SaveFileDialog();
-
-                    saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-
-                    if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        recStream = new System.IO.StreamWriter(saveFileDialog1.FileName);
-                        foreach (Channel ch in config.Config.Channels)
-                        {
-                            if (ch is InputChannel input && ch.Source == ChannelSource.LabJack)
-                                recStream.Write("\t" + ch.Name);
-                        }
-
-                        recStream.WriteLine();
-                        startRecTime = DateTime.Now;
-                    }
+                    if (ch is InputChannel input && ch.Source == ChannelSource.LabJack)
+                        recStream.Write("\t" + ch.Name);
                 }
+
+                recStream.WriteLine();
+                startRecTime = DateTime.Now;
             }
 
             recording = !recording;

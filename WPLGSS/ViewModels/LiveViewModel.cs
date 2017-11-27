@@ -43,6 +43,15 @@ namespace WPLGSS.ViewModels
         public ICommand OpenSequenceCommand { get; }
         public ICommand StartStopRecCommand { get; }
 
+        private bool recording;
+
+        public bool Recording
+        {
+            get { return recording; }
+            set { SetProperty(ref recording, value); }
+        }
+
+
         private SequenceFile currentSequence;
         public SequenceFile CurrentSequence
         {
@@ -78,10 +87,28 @@ namespace WPLGSS.ViewModels
                 }
             });
         }
+
+        public InteractionRequest<FileInteractionNotification> RecordingFileRequest { get; } = new InteractionRequest<FileInteractionNotification>();
         
         private void StartStopRecord()
         {
-            dataAquisition.StartStopRecord();
+            if (Recording)
+            {
+                RecordingFileRequest.Raise(new FileInteractionNotification
+                {
+                    Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*"
+                }, file =>
+                {
+                    if (file.Confirmed)
+                    {
+                        dataAquisition.StartStopRecord(file.Path);
+                    }
+                });
+            }
+            else
+            {
+                dataAquisition.StartStopRecord(null); 
+            }
         }
 
         public InteractionRequest<FileInteractionNotification> OpenRequest { get; } = new InteractionRequest<FileInteractionNotification>();

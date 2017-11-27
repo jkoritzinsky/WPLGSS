@@ -23,8 +23,16 @@
   </UserControl.Resources>
   <DockPanel>
     <DockPanel Dock="Top">
-            <ToggleButton Content="Record" Command="{Binding StartStopRecCommand}" 
-                          DockPanel.Dock="Right" VerticalAlignment="Top" HorizontalAlignment="Right"  />
+      <ToggleButton Content="Record" Command="{Binding StartStopRecCommand}" 
+                    IsChecked="{Binding Recording}"
+                    DockPanel.Dock="Right" VerticalAlignment="Top" HorizontalAlignment="Right"
+      >
+        <i:Interaction.Triggers>
+          <prism:InteractionRequestTrigger SourceObject="{Binding RecordingFileRequest, Mode=OneWay}">
+            <interactivity:SaveFileAction />
+          </prism:InteractionRequestTrigger>
+        </i:Interaction.Triggers>
+      </ToggleButton>
       <ContentControl prism:RegionManager.RegionName="{x:Static local:RegionNames.GraphRegion}" />
     </DockPanel>
     <StackPanel DockPanel.Dock="Bottom">

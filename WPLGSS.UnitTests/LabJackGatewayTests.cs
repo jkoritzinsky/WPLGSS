@@ -9,16 +9,16 @@ using LabJack;
 
 namespace WPLGSS.Services.UnitTests
 {
-    public class DataServiceTests
+    public class LabJackGatewayTests
     {
         [Fact]
         public void OpenLabJack()
         {
-            LabJackGateway LJDevice = new LabJackGateway();
+            var LJDevice = new LabJackGateway();
 
             LJDevice.OpenLabJack();
 
-            Assert.Equal(LJM.LJMERROR.NOERROR, LJDevice.ret);
+            Assert.Equal(LJM.LJMERROR.NOERROR, LJDevice.LastError);
         }
 
         [Fact]
@@ -26,7 +26,7 @@ namespace WPLGSS.Services.UnitTests
         {
             double[] DataOut = new double[2];
             double[] DataIn;
-            LabJackGateway LJDevice = new LabJackGateway();
+            var LJDevice = new LabJackGateway();
 
             LJDevice.OpenLabJack();
 

@@ -16,12 +16,12 @@ namespace WPLGSS.Services
         String[] InputNames = new String[14];
         String[] OutputNames = new String[2];
 
-        public LJM.LJMERROR ret;
+        public LJM.LJMERROR LastError { get; private set; }
 
         public void OpenLabJack()
         {
 
-            ret = LJM.OpenS("ANY", "ANY", "ANY", ref LJhandle);
+            LastError = LJM.OpenS("ANY", "ANY", "ANY", ref LJhandle);
 
             InputNames[0] = "AIN0";
             InputNames[1] = "AIN1";
@@ -49,7 +49,7 @@ namespace WPLGSS.Services
 
             if (LJhandle == 0) return Data;
 
-            ret = LJM.eReadNames(LJhandle, 1, InputNames, Data, ref ErrorAddress);
+            LastError = LJM.eReadNames(LJhandle, 1, InputNames, Data, ref ErrorAddress);
 
             return Data;
         }
@@ -58,7 +58,7 @@ namespace WPLGSS.Services
         {
             int ErrorAddress = 0;
 
-            ret = LJM.eWriteNames(LJhandle, 1, OutputNames, Data, ref ErrorAddress);
+            LastError = LJM.eWriteNames(LJhandle, 1, OutputNames, Data, ref ErrorAddress);
         }
     }
 }
