@@ -39,28 +39,24 @@ namespace WPLGSS.Services
             LJ.SetAnalogData(dataOut);
             dataIn = LJ.GetAnalogData();
 
+            DateTime SampleTime = DateTime.Now;
+
             if (LJ.ret != LabJack.LJM.LJMERROR.NOERROR)
             {
                 SynchronizationContext.Current.Post(_ => {
-
+                    foreach (var chan in config.Config.Channels)
+                    {
+                        if (chan is InputChannel input && chan.Source == ChannelSource.LabJack)
+                        {
+                            (chan as InputChannel).value = input.ScalingFunction(dataIn[input.ChannelId]);
+                            ChannelValueUpdated?.Invoke(
+                                this,
+                                new ChannelValueUpdatedEventArgs(chan, (chan as InputChannel).value, SampleTime)
+                            );
+                        }
+                    }
                 }, null);
             }
-
-            DateTime SampleTime = DateTime.Now;
-
-            SynchronizationContext.Current.Post( _ => {
-                foreach (var chan in config.Config.Channels)
-                {
-                    if (chan is InputChannel input && chan.Source == ChannelSource.LabJack)
-                    {
-                        (chan as InputChannel).value = input.ScalingFunction(dataIn[input.ChannelId]);
-                        ChannelValueUpdated?.Invoke(
-                            this,
-                            new ChannelValueUpdatedEventArgs(chan, (chan as InputChannel).value, SampleTime)
-                        );
-                    }
-                }
-            }, null);
 
             if (recording)
             {
