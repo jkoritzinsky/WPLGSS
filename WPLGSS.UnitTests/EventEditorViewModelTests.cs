@@ -107,22 +107,7 @@ namespace WPLGSS.ViewModels.UnitTests
         [Fact]
         public void ChannelNotInChannelOptionsCausesValidationError()
         {
-            var configService = A.Fake<IConfigService>();
-            A.CallTo(() => configService.Config).Returns(new Config
-            {
-                Channels =
-                {
-                    new InputChannel
-                    {
-                        Name = "Input"
-                    },
-                    new Channel
-                    {
-                        Name = "Output"
-                    }
-                }
-            });
-            var viewModel = new EventEditorViewModel(configService)
+            var viewModel = new EventEditorViewModel(fakeConfigService)
             {
                 Channel = "Does not exist"
             };
@@ -133,22 +118,7 @@ namespace WPLGSS.ViewModels.UnitTests
         [Fact]
         public void ChannelInChannelOptionsCausesNoValidationError()
         {
-            var configService = A.Fake<IConfigService>();
-            A.CallTo(() => configService.Config).Returns(new Config
-            {
-                Channels =
-                {
-                    new InputChannel
-                    {
-                        Name = "Input"
-                    },
-                    new Channel
-                    {
-                        Name = "Output"
-                    }
-                }
-            });
-            var viewModel = new EventEditorViewModel(configService)
+            var viewModel = new EventEditorViewModel(fakeConfigService)
             {
                 Channel = "Output"
             };
@@ -159,22 +129,7 @@ namespace WPLGSS.ViewModels.UnitTests
         [Fact]
         public void OutputEventRequiresOutputChannel()
         {
-            var configService = A.Fake<IConfigService>();
-            A.CallTo(() => configService.Config).Returns(new Config
-            {
-                Channels =
-                {
-                    new InputChannel
-                    {
-                        Name = "Input"
-                    },
-                    new Channel
-                    {
-                        Name = "Output"
-                    }
-                }
-            });
-            var viewModel = new EventEditorViewModel(configService)
+            var viewModel = new EventEditorViewModel(fakeConfigService)
             {
                 Type = EventType.Output,
                 Channel = "Input"
@@ -190,22 +145,7 @@ namespace WPLGSS.ViewModels.UnitTests
         [Fact]
         public void AbortEventRequiresInputChannel()
         {
-            var configService = A.Fake<IConfigService>();
-            A.CallTo(() => configService.Config).Returns(new Config
-            {
-                Channels =
-                {
-                    new InputChannel
-                    {
-                        Name = "Input"
-                    },
-                    new Channel
-                    {
-                        Name = "Output"
-                    }
-                }
-            });
-            var viewModel = new EventEditorViewModel(configService)
+            var viewModel = new EventEditorViewModel(fakeConfigService)
             {
                 Type = EventType.Abort,
                 Channel = "Output"
@@ -221,22 +161,7 @@ namespace WPLGSS.ViewModels.UnitTests
         [Fact]
         public void CannotSaveInvalidEvent()
         {
-            var configService = A.Fake<IConfigService>();
-            A.CallTo(() => configService.Config).Returns(new Config
-            {
-                Channels =
-                {
-                    new InputChannel
-                    {
-                        Name = "Input"
-                    },
-                    new Channel
-                    {
-                        Name = "Output"
-                    }
-                }
-            });
-            var viewModel = new EventEditorViewModel(configService)
+            var viewModel = new EventEditorViewModel(fakeConfigService)
             {
                 Type = EventType.Abort,
                 Channel = "Input",
