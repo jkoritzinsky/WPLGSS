@@ -60,6 +60,13 @@ namespace WPLGSS.Services
                                 new ChannelValueUpdatedEventArgs(chan, value, SampleTime)
                             );
                         }
+                        else
+                        {
+                            ChannelValueUpdated?.Invoke(
+                                this,
+                                new ChannelValueUpdatedEventArgs(chan, dataOut[chan.ChannelId] < 0.5 ? 0 : 1, SampleTime)
+                            );
+                        }
                     }
                 };
 
