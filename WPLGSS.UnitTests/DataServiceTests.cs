@@ -30,7 +30,7 @@ namespace WPLGSS.Services.UnitTests
         public async Task SampleWillOnlyReportConfiguredChannels()
         {
             var labJack = A.Fake<ILabJackGateway>();
-            A.CallTo(() => labJack.LastError).Returns((LabJack.LJM.LJMERROR)(-1));
+            A.CallTo(() => labJack.LastError).Returns(LabJack.LJM.LJMERROR.NOERROR);
             A.CallTo(() => labJack.GetAnalogData()).Returns(new double[] { 0, 1, 2, 3, 4, 5 });
 
             InputChannel channel;

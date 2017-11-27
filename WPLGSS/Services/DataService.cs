@@ -45,7 +45,7 @@ namespace WPLGSS.Services
 
             DateTime SampleTime = DateTime.Now;
 
-            if (LJ.LastError != LabJack.LJM.LJMERROR.NOERROR)
+            if (LJ.LastError == LabJack.LJM.LJMERROR.NOERROR)
             {
                 SendOrPostCallback eventCallback = _ => {
                     ChannelValues.Clear();
