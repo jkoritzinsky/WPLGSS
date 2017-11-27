@@ -116,6 +116,7 @@
     <Compile Include="Models\Sequence.cs" />
     <Compile Include="Services\ChannelValueUpdatedEventArgs.cs" />
     <Compile Include="Services\DataService.cs" />
+    <Compile Include="Services\ILabJackGateway.cs" />
     <Compile Include="Services\LabJackGateway.cs" />
     <Compile Include="Services\ConfigService.cs" />
     <Compile Include="Services\DummyDataService.cs" />

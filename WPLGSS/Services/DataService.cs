@@ -33,6 +33,14 @@ namespace WPLGSS.Services
         {
             LJ.SetAnalogData(dataOut);
             dataIn = LJ.GetAnalogData();
+
+            if (LJ.ret != LabJack.LJM.LJMERROR.NOERROR)
+            {
+                SynchronizationContext.Current.Post(_ => {
+
+                }, null);
+            }
+
             DateTime SampleTime = DateTime.Now;
 
             SynchronizationContext.Current.Post( _ => {
