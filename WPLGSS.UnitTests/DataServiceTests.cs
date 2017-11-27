@@ -30,14 +30,14 @@ namespace WPLGSS.Services.UnitTests
 
             LJDevice.OpenLabJack();
 
-            DataOut[0] = 15;
-            DataOut[1] = 30;
+            DataOut[0] = 1;
+            DataOut[1] = 2;
             LJDevice.SetAnalogData(DataOut);
 
             DataIn = LJDevice.GetAnalogData();
 
-            Assert.Equal(DataIn[0], DataOut[0], 3);
-            Assert.Equal(DataIn[1], DataOut[1], 3);
+            Assert.Equal(DataOut[0], DataIn[0], 2);
+            Assert.Equal(DataOut[1], DataIn[1], 2);
         }
     }
 }

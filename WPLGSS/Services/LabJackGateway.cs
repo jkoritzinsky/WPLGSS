@@ -49,7 +49,7 @@ namespace WPLGSS.Services
 
             if (LJhandle == 0) return Data;
 
-            ret = LJM.eReadNames(LJhandle, 1, InputNames, Data, ref ErrorAddress);
+            ret = LJM.eReadNames(LJhandle, 14, InputNames, Data, ref ErrorAddress);
 
             return Data;
         }
@@ -58,7 +58,7 @@ namespace WPLGSS.Services
         {
             int ErrorAddress = 0;
 
-            ret = LJM.eWriteNames(LJhandle, 1, OutputNames, Data, ref ErrorAddress);
+            ret = LJM.eWriteNames(LJhandle, 2, OutputNames, Data, ref ErrorAddress);
         }
     }
 }
