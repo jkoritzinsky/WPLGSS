@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WPLGSS.Interactivity;
+using WPLGSS.Models;
 using WPLGSS.Services;
 using Xunit;
 
@@ -20,7 +21,7 @@ namespace WPLGSS.ViewModels.UnitTests
             var path = "Test Path";
             var file = new SequenceFile(path, new SequenceViewModel(new Models.Sequence()));
 
-            var viewModel = new LiveViewModel(sequencePersistence, sequenceEditor, A.Fake<IDataAquisition>());
+            var viewModel = new LiveViewModel(A.Fake<ISequenceRunner>(), sequencePersistence, sequenceEditor, A.Fake<IDataAquisition>());
 
             var openRequestRaised = false;
             viewModel.OpenRequest.Raised += (o, e) =>
@@ -44,11 +45,24 @@ namespace WPLGSS.ViewModels.UnitTests
         {
             var dataAquisition = A.Fake<IDataAquisition>();
 
-            var viewModel = new LiveViewModel(A.Fake<ISequencePersistence>(), A.Fake<ISequenceEditorService>(), dataAquisition);
+            var viewModel = new LiveViewModel(A.Fake<ISequenceRunner>(), A.Fake<ISequencePersistence>(), A.Fake<ISequenceEditorService>(), dataAquisition);
 
             viewModel.StartServiceCommand.Execute(null);
 
             A.CallTo(() => dataAquisition.StartService()).MustHaveHappened();
+        }
+
+        [Fact]
+        public void RunSequenceCommandRunsSequence()
+        {
+            var runner = A.Fake<ISequenceRunner>();
+            var sequence = new Sequence();
+
+            var viewModel = new LiveViewModel(runner, A.Fake<ISequencePersistence>(), A.Fake<ISequenceEditorService>(), A.Fake<IDataAquisition>());
+
+            viewModel.RunSequenceCommand.Execute(sequence);
+
+            A.CallTo(() => runner.RunSequence(sequence)).MustHaveHappened();
         }
     }
 }

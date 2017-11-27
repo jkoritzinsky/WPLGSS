@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WPLGSS.Interactivity;
+using WPLGSS.Models;
 using WPLGSS.Services;
 
 namespace WPLGSS.ViewModels
@@ -21,14 +22,15 @@ namespace WPLGSS.ViewModels
         private readonly ISequencePersistence sequencePersistence;
 
         [ImportingConstructor]
-        public LiveViewModel(ISequencePersistence sequencePersistence, ISequenceEditorService fileEditorService, IDataAquisition dataAquisition)
+        public LiveViewModel(ISequenceRunner runner, ISequencePersistence sequencePersistence, ISequenceEditorService fileEditorService, IDataAquisition dataAquisition)
         {
             this.sequencePersistence = sequencePersistence;
             this.fileEditorService = fileEditorService;
 
             OpenSequenceCommand = new DelegateCommand(OpenSequence);
-            StartServiceCommand = new DelegateCommand(StartService);
+            //StartServiceCommand = new DelegateCommand(StartService);
             StartStopRecCommand = new DelegateCommand(StartStopRecord);
+            RunSequenceCommand = new DelegateCommand<Sequence>(runner.RunSequence);
             this.dataAquisition = dataAquisition;
         }
 
@@ -40,6 +42,19 @@ namespace WPLGSS.ViewModels
 
         public ICommand OpenSequenceCommand { get; }
         public ICommand StartStopRecCommand { get; }
+
+        private SequenceFile currentSequence;
+        public SequenceFile CurrentSequence
+        {
+            get
+            {
+                return currentSequence;
+            }
+            set
+            {
+                SetProperty(ref currentSequence, value);
+            }
+        }
 
         private bool started;
         private void StartService()
