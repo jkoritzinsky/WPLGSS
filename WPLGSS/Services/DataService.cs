@@ -53,7 +53,14 @@ namespace WPLGSS.Services
                     {
                         if (chan is InputChannel input && chan.Source == ChannelSource.LabJack)
                         {
-                            double value = input.ScalingFunction(dataIn[input.ChannelId]);
+                            double value;
+                            if (input.ScalingFunction != null)
+                            {
+                                value = input.ScalingFunction(dataIn[input.ChannelId]);
+                            } else
+                            {
+                                value = dataIn[input.ChannelId];
+                            }
                             ChannelValues[input] = value;
                             ChannelValueUpdated?.Invoke(
                                 this,
@@ -135,8 +142,8 @@ namespace WPLGSS.Services
 
         public void SetChannelValue(Channel channel, double value)
         {
-            if (value == 0) dataOut[channel.ChannelId] = 0;
-            if (value == 1) dataOut[channel.ChannelId] = 12;
+            if (value == 0) dataOut[channel.ChannelId] = value;
+            if (value == 1) dataOut[channel.ChannelId] = value;
         }
 
         public void Dispose()
