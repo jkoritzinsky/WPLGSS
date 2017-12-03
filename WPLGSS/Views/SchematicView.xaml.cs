@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WPLGSS.ViewModels;
+using WPLGSS.Models;
 
 namespace WPLGSS.Views
 {
@@ -43,16 +44,26 @@ namespace WPLGSS.Views
     [Export]
     public partial class SchematicView : UserControl
     {
-        public SchematicView()
+        public SchematicView(SchematicViewModel model)
         {
             InitializeComponent();
+
+            DataContext = model;
+
+            model.SetBindings(SchematicGrid.Children);
         }
 
-        [ImportingConstructor]
-        public SchematicView(SchematicViewModel model)
-            : this()
+        private void ToggleOutput(object sender, RoutedEventArgs e)
         {
-            DataContext = model;
+            ((SchematicViewModel)this.DataContext).ToggleOutput(sender, e);
         }
+
+
+        //[ImportingConstructor]
+        //public SchematicView(SchematicViewModel model)
+        //    : this()
+        //{
+        //    DataContext = model;
+        //}
     }
 }

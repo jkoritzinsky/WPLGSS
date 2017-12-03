@@ -107,14 +107,18 @@ namespace WPLGSS.ViewModels
 
         private void RecordValue(Channel channel, double value, DateTime time)
         {
-            var seriesList = channelSeriesMap[channel];
-            seriesList.ForEach(series =>
+            // TODO: ugly hack if block, remove me
+            if (channelSeriesMap.ContainsKey(channel))
             {
-                if (series.Points.Count >= NumPoints)
-                    series.Points.RemoveAt(0);
-                series.Points.Add(DateTimeAxis.CreateDataPoint(time, value));
-                series.PlotModel.InvalidatePlot(true);
-            });
+                var seriesList = channelSeriesMap[channel];
+                seriesList.ForEach(series =>
+                {
+                    if (series.Points.Count >= NumPoints)
+                        series.Points.RemoveAt(0);
+                    series.Points.Add(DateTimeAxis.CreateDataPoint(time, value));
+                    series.PlotModel.InvalidatePlot(true);
+                });
+            }
         }
     }
 }
