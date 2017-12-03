@@ -12,8 +12,7 @@ namespace WPLGSS.Models
 {
     public enum ChannelSource
     {
-        LabJack,
-        Arduino
+        LabJack
     }
 
     public class Channel : BindableBase, IDataErrorInfo

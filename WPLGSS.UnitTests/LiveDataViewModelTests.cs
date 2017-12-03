@@ -26,7 +26,7 @@ namespace WPLGSS.ViewModels.UnitTests
                 }
             });
 
-            var viewModel = new LiveDataViewModel(configService, A.Fake<IDataAquisition>(), A.Fake<IEventAggregator>());
+            var viewModel = new LiveDataViewModel(configService, A.Fake<IDataAquisition>(), A.Fake<IEventAggregator>(), A.Fake<ISequenceRunner>());
 
             Assert.Single(viewModel.Channels);
             Assert.Equal(channel, viewModel.Channels[0].Channel);
@@ -43,7 +43,7 @@ namespace WPLGSS.ViewModels.UnitTests
             A.CallTo(() => eventAggregator.GetEvent<AddToGraphEvent>()).Returns(addToGraphEvent);
             A.CallTo(() => eventAggregator.GetEvent<GraphCreatedEvent>()).Returns(new GraphCreatedEvent());
 
-            var viewModel = new LiveDataViewModel(configService, A.Fake<IDataAquisition>(), eventAggregator);
+            var viewModel = new LiveDataViewModel(configService, A.Fake<IDataAquisition>(), eventAggregator, A.Fake<ISequenceRunner>());
 
             var channelGraphTuple = Tuple.Create(new InputChannel(), 0);
 
@@ -71,7 +71,7 @@ namespace WPLGSS.ViewModels.UnitTests
 
             var dataAquisition = A.Fake<IDataAquisition>();
 
-            var viewModel = new LiveDataViewModel(configService, dataAquisition, A.Fake<IEventAggregator>());
+            var viewModel = new LiveDataViewModel(configService, dataAquisition, A.Fake<IEventAggregator>(), A.Fake<ISequenceRunner>());
 
             dataAquisition.ChannelValueUpdated += Raise.With(new ChannelValueUpdatedEventArgs(channel, 2, DateTime.Now));
 
@@ -93,7 +93,7 @@ namespace WPLGSS.ViewModels.UnitTests
 
             var dataAquisition = A.Fake<IDataAquisition>();
 
-            var viewModel = new LiveDataViewModel(configService, dataAquisition, A.Fake<IEventAggregator>());
+            var viewModel = new LiveDataViewModel(configService, dataAquisition, A.Fake<IEventAggregator>(), A.Fake<ISequenceRunner>());
 
             var live = viewModel.Channels.First(liveChannel => liveChannel.Channel == channel);
             live.Value = 5;
@@ -113,11 +113,25 @@ namespace WPLGSS.ViewModels.UnitTests
             var graphCreatedEvent = new GraphCreatedEvent();
             A.CallTo(() => eventAggregator.GetEvent<GraphCreatedEvent>()).Returns(graphCreatedEvent);
 
-            var viewModel = new LiveDataViewModel(configService, A.Fake<IDataAquisition>(), eventAggregator);
+            var viewModel = new LiveDataViewModel(configService, A.Fake<IDataAquisition>(), eventAggregator, A.Fake<ISequenceRunner>());
             
             graphCreatedEvent.Publish(1);
 
             Assert.Contains(1, viewModel.GraphIds);
+        }
+
+        [Fact]
+        public void RunningSequenceDisablesOutputToggling()
+        {
+            var configService = A.Fake<IConfigService>();
+            A.CallTo(() => configService.Config).Returns(new Config());
+            var runner = A.Fake<ISequenceRunner>();
+
+            var viewModel = new LiveDataViewModel(configService, A.Fake<IDataAquisition>(), A.Fake<IEventAggregator>(), runner);
+
+            runner.SequenceRunningStateChanged += Raise.With(new StatusChangedEventArgs { Status = true });
+
+            Assert.False(viewModel.EnableOutputToggling);
         }
     }
 }

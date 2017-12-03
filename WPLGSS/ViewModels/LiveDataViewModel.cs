@@ -21,7 +21,7 @@ namespace WPLGSS.ViewModels
         private readonly IDataAquisition dataAquisition;
 
         [ImportingConstructor]
-        public LiveDataViewModel(IConfigService config, IDataAquisition dataAquisition, IEventAggregator eventAggregator)
+        public LiveDataViewModel(IConfigService config, IDataAquisition dataAquisition, IEventAggregator eventAggregator, ISequenceRunner runner)
         {
             UpdateLiveChannelsFromConfig(config.Config);
 
@@ -36,6 +36,7 @@ namespace WPLGSS.ViewModels
             SendOutputValueCommand = new DelegateCommand<LiveChannel>(SendOutputValue);
 
             eventAggregator.GetEvent<GraphCreatedEvent>().Subscribe(id => GraphIds.Add(id));
+            runner.SequenceRunningStateChanged += (o, e) => EnableOutputToggling = !e.Status;
             this.config = config;
             this.dataAquisition = dataAquisition;
         }
@@ -73,6 +74,15 @@ namespace WPLGSS.ViewModels
             get { return channels; }
             set { SetProperty(ref channels, value); }
         }
+
+        private bool enableOutputToggling;
+
+        public bool EnableOutputToggling
+        {
+            get { return enableOutputToggling; }
+            set { SetProperty(ref enableOutputToggling, value); }
+        }
+
 
 
         public ICommand AddToGraphCommand { get; }

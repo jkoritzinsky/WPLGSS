@@ -19,7 +19,6 @@ namespace WPLGSS.Services
         void SetChannelValue(Channel channel, double value);
 
         event EventHandler<StatusChangedEventArgs> LabJackConnectionChanged;
-        event EventHandler<StatusChangedEventArgs> ArduinoConnectionChanged;
         event EventHandler<ChannelValueUpdatedEventArgs> ChannelValueUpdated;
 
         ConcurrentDictionary<InputChannel, double> ChannelValues { get; }

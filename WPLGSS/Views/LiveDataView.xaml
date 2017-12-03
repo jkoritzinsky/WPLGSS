@@ -18,6 +18,7 @@
               IsChecked="{Binding Value, Mode=TwoWay, Converter={StaticResource OutputConverter}}"
               Command="{Binding DataContext.SendOutputValueCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LiveDataView}}}"
               CommandParameter="{Binding}"
+              IsEnabled="{Binding EnableOutputToggling, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:LiveDataView}}}"
             />
         </DataTemplate>
         <DataTemplate x:Key="InputChannel">

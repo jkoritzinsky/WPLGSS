@@ -15,7 +15,6 @@ namespace WPLGSS.Services
     public class DataService : IDataAquisition, IDisposable
     {
         public event EventHandler<StatusChangedEventArgs> LabJackConnectionChanged;
-        public event EventHandler<StatusChangedEventArgs> ArduinoConnectionChanged;
         public event EventHandler<ChannelValueUpdatedEventArgs> ChannelValueUpdated;
 
         public ConcurrentDictionary<InputChannel, double> ChannelValues { get; } = new ConcurrentDictionary<InputChannel, double>();
