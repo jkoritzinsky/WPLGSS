@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace WPLGSS.Services
 {
     public interface ISequenceRunner
-    {
+    { 
         void RunSequence(Models.Sequence sequence);
         event EventHandler<StatusChangedEventArgs> SequenceRunningStateChanged;
-        void OnThresholdReached(object Threshold, ChannelValueUpdatedEventArgs e);
+        void OnThresholdReached(object Threshold, System.Timers.ElapsedEventArgs e);
     }
 }

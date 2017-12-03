@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
@@ -14,27 +15,52 @@ namespace WPLGSS.Services
     public class SequenceRunner: ISequenceRunner
     {
         public event EventHandler<StatusChangedEventArgs> SequenceRunningStateChanged;
+        private System.Timers.Timer timer;
+        ObservableCollection<Event> primarySequence;
+        ObservableCollection<Event> abortSequence;
+        ConcurrentDictionary<InputChannel, double> ChannelValues;
+        public Queue<Event> cache;
+        private WPLGSS.Models.AbortCondition AbortCondition;
         
 
-        public void OnThresholdReached(object threshold, ChannelValueUpdatedEventArgs e)
+        // Run the abort sequence
+        public void OnThresholdReached(object source, System.Timers.ElapsedEventArgs e)
         {
-            // Run Abort Sequence
+            foreach(Event curr in abortSequence)
+            {
+                SequenceRunningStateChanged(this, new StatusChangedEventArgs());
+                cache.Enqueue(curr);
+            }
         }
 
+        // Raises StatusChangedEvent every millisecond and runs abort once abort condition met
+        private void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
+        {
+            foreach (Event curr in primarySequence)
+            {
+                if (timer.Equals(curr.StartTime))
+                {
+                    SequenceRunningStateChanged(this, new StatusChangedEventArgs());
+                    cache.Enqueue(curr);
+                    if(AbortCondition.Equals(curr))
+                    {
+                        timer.Start();
+                        timer.Elapsed += OnThresholdReached;
+                        OnThresholdReached(this, e);
+                    }
+                }
+            }
+        }
+
+        // Raises Timed event every millisecond
         public void RunSequence(Sequence sequence)
         {
-            //ObservableCollection<Event> primarysequence = sequence.PrimarySequence;
-            //WaitHandle waitObject = null;
-            //WaitOrTimerCallback callBack = null;
-            //object state = null;
-            //TimeSpan timeout;
-            //bool executeOnlyOnce = true;
-            //foreach (Event curr in primarysequence) {
-                
-            //    timeout = curr.EndTime - curr.StartTime;
-            //    RegisteredWaitHandle waitHandle = ThreadPool.RegisterWaitForSingleObject(waitObject, callBack, state, timeout, executeOnlyOnce);
-            //}
-
+            primarySequence = sequence.PrimarySequence;
+            abortSequence = sequence.AbortSequence;
+            timer = new System.Timers.Timer();
+            timer.Interval = 1;
+            timer.Elapsed += OnTimedEvent;       
+            timer.Enabled = true;
         }
     }
 }
