@@ -12,30 +12,30 @@
         <Grid Name="SchematicGrid">
             <Image Source="WPL_PID.png" Panel.ZIndex="1" />
 
-            <Button Name="b4_PV_1" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Click="ToggleOutput" Margin="1118,646,1145.2,768.4" />
-            <Button Name="b4_PV_2" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Click="ToggleOutput" Margin="1718,645,545.2,769.4" />
-            <Button x:Name="b5_PV_3" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Click="ToggleOutput" Margin="1556,496,707.2,918.4" />
-            <Button x:Name="b5_PV_2" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Click="ToggleOutput" Margin="1339,499,924.2,915.4"  />
-            <Button x:Name="b5_PV_1" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Click="ToggleOutput" Margin="1073,384,1190.2,1030.4"/>
-            <Button x:Name="b1_PV_1" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Click="ToggleOutput" Margin="649,243,1614.2,1171.4" />
-            <Button x:Name="b1_PV_2" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Click="ToggleOutput" Margin="1556,136,707.2,1278.4" />
-            <Button x:Name="b2_PV_1" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Click="ToggleOutput" Margin="1113,1017,1150.2,397.4" />
-            <Button x:Name="b2_PV_2" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Click="ToggleOutput" Margin="1728,1018,535.2,396.4" />
-            <Button x:Name="b3_PV_3" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Click="ToggleOutput" Margin="1550,1181,713.2,233.4" />
-            <Button x:Name="b3_PV_2" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Click="ToggleOutput" Margin="1367,1180,896.2,234.4" />
-            <Button x:Name="b1_PV_4" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Click="ToggleOutput"  Margin="1580,1416,683.2,-1.6" />
-            <Button x:Name="b3_PV_1" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Click="ToggleOutput" Margin="973,1274,1290.2,140.4" />
-            <Button x:Name="b1_PV_3" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Click="ToggleOutput" Margin="649,719,1614.2,695.4" />
-            <TextBlock x:Name="tPT_10" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1642,619,621.2,795.4" />
-            <TextBlock x:Name="tTT_07" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1474,993,789.2,421.4" />
-            <TextBlock x:Name="tPT_09" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1655,993,608.2,421.4" />
-            <TextBlock x:Name="tPT_03" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="996,619,1267.2,795.4" />
-            <TextBlock x:Name="tPT_06" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="996,993,1267.2,421.4" />
-            <TextBlock x:Name="tTT_05" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="737,933,1526.2,481.4" />
-            <TextBlock x:Name="tTT_04" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="737,850,1526.2,564.4" />
-            <TextBlock x:Name="tTT_01" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="729,460,1534.2,954.4" />
-            <TextBlock x:Name="tTT_02" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="729,540,1534.2,874.4" />
-            <TextBlock Name="tTT_08" FontSize="15"  Height="20" Text="{Binding Path=Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1460,619,803.2,795.4" />
+            <Button CommandParameter="{Binding Path=[4-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1118,646,1145.2,768.4" />
+            <Button CommandParameter="{Binding Path=[4-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1718,645,545.2,769.4" />
+            <Button CommandParameter="{Binding Path=[5-PV-3]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1556,496,707.2,918.4" />
+            <Button CommandParameter="{Binding Path=[5-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1339,499,924.2,915.4"  />
+            <Button CommandParameter="{Binding Path=[5-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1073,384,1190.2,1030.4"/>
+            <Button CommandParameter="{Binding Path=[1-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="649,243,1614.2,1171.4" />
+            <Button CommandParameter="{Binding Path=[1-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1556,136,707.2,1278.4" />
+            <Button CommandParameter="{Binding Path=[2-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1113,1017,1150.2,397.4" />
+            <Button CommandParameter="{Binding Path=[2-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1728,1018,535.2,396.4" />
+            <Button CommandParameter="{Binding Path=[3-PV-3]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1550,1181,713.2,233.4" />
+            <Button CommandParameter="{Binding Path=[3-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1367,1180,896.2,234.4" />
+            <Button CommandParameter="{Binding Path=[1-PV-4]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}"  Margin="1580,1416,683.2,-1.6" />
+            <Button CommandParameter="{Binding Path=[3-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="973,1274,1290.2,140.4" />
+            <Button CommandParameter="{Binding Path=[1-PV-3]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="649,719,1614.2,695.4" />
+            <TextBlock FontSize="15"  Height="20" Text="{Binding Path=[PT-10].Channel.Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1642,619,621.2,795.4" />
+            <TextBlock FontSize="15"  Height="20" Text="{Binding Path=[TT-07].Channel.Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1474,993,789.2,421.4" />
+            <TextBlock FontSize="15"  Height="20" Text="{Binding Path=[PT-09].Channel.Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1655,993,608.2,421.4" />
+            <TextBlock FontSize="15"  Height="20" Text="{Binding Path=[PT-03].Channel.Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="996,619,1267.2,795.4" />
+            <TextBlock FontSize="15"  Height="20" Text="{Binding Path=[PT-06].Channel.Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="996,993,1267.2,421.4" />
+            <TextBlock FontSize="15"  Height="20" Text="{Binding Path=[TT-05].Channel.Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="737,933,1526.2,481.4" />
+            <TextBlock FontSize="15"  Height="20" Text="{Binding Path=[TT-04].Channel.Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="737,850,1526.2,564.4" />
+            <TextBlock FontSize="15"  Height="20" Text="{Binding Path=[TT-01].Channel.Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="729,460,1534.2,954.4" />
+            <TextBlock FontSize="15"  Height="20" Text="{Binding Path=[TT-02].Channel.Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="729,540,1534.2,874.4" />
+            <TextBlock FontSize="15"  Height="20" Text="{Binding Path=[TT-08].Channel.Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1460,619,803.2,795.4" />
 
         </Grid>
 

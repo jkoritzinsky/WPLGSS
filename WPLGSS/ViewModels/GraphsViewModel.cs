@@ -107,7 +107,6 @@ namespace WPLGSS.ViewModels
 
         private void RecordValue(Channel channel, double value, DateTime time)
         {
-            // TODO: ugly hack if block, remove me
             if (channelSeriesMap.ContainsKey(channel))
             {
                 var seriesList = channelSeriesMap[channel];

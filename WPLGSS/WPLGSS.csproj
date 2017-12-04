@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -139,6 +139,7 @@
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\LiveDataViewModel.cs" />
     <Compile Include="Services\SequenceFile.cs" />
+    <Compile Include="ViewModels\ChannelPresenterViewModelBase.cs" />
     <Compile Include="ViewModels\SchematicViewModel.cs" />
     <Compile Include="ViewModels\PersistViewModelBase.cs" />
     <Compile Include="ViewModels\SequenceManagerViewModel.cs" />

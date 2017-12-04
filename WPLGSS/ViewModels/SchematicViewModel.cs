@@ -12,101 +12,53 @@ using WPLGSS.Interactivity;
 using WPLGSS.Services;
 using WPLGSS.Models;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace WPLGSS.ViewModels
 {
     [Export]
-    public class SchematicViewModel : BindableBase
+    public class SchematicViewModel : ChannelPresenterViewModelBase
     {
-        private readonly IDataAquisition dataAquisition;
-        private readonly IConfigService configService;
-
         [ImportingConstructor]
-        public SchematicViewModel(IDataAquisition dataAquisition, IConfigService configService)
+        public SchematicViewModel(IConfigService config, IDataAquisition dataAquisition, ISequenceRunner runner)
+            :base(config, dataAquisition, runner)
         {
-            this.dataAquisition = dataAquisition;
-            this.configService = configService;
-            dataAquisition.ChannelValueUpdated += (o, e) => PushValueToIndicator(e.Channel, e.Value, e.Time);
-        }
-
-        private void PushValueToIndicator(Channel channel, double value, DateTime time)
-        {
-            foreach (ChannelIndicator chi in chIndicators)
+            Channels.CollectionChanged += (o, e) =>
             {
-                if (chi.ch == channel)
+                if (e.NewItems != null)
                 {
-                    chi.block.Text = value;
-                    break;
-                }
-            }
-        }
-        public string Name => "Schematic View";
-
-        struct ChannelIndicator
-        {
-            public Channel ch;
-            public TextBlock block;
-        }
-        List<ChannelIndicator> chIndicators = new List<ChannelIndicator>();
-
-        public void SetBindings(UIElementCollection elements)
-        {
-            string devName;
-            foreach (System.Windows.Controls.UIElement ele in elements)
-            {
-                if (ele is TextBlock)
-                {
-                    // Indicators
-
-                    // Element names are the same as the facility number, but with
-                    // a leading 't' and '-' replaced with '_' to meet XAML naming reqs
-                    devName = (ele as TextBlock).Name.Substring(1).Replace('_', '-');
-
-                    foreach (Channel ch in configService.Config.Channels)
+                    foreach (LiveChannel item in e.NewItems)
                     {
-                        if (ch.Name.Equals(devName))
-                        {
-                            ChannelIndicator chi = new ChannelIndicator();
-                            chi.ch = ch;
-                            chi.block = (ele as TextBlock);
-                            chIndicators.Add(chi);
-                            break;
-                        }
-                    }
+                        item.Channel.PropertyChanged += NotifyUpdated;
+                    } 
                 }
-            }
-        }
-
-        public void ToggleOutput(object sender, RoutedEventArgs e)
-        {
-            string name = (sender as System.Windows.Controls.Button).Name.Substring(1).Replace('_', '-');
-            string txt = (sender as System.Windows.Controls.Button).Content;
-            foreach (Channel ch in configService.Config.Channels)
-            {
-                if (!(ch is InputChannel))
+                if (e.OldItems != null)
                 {
-                    // Output channels only
-                    if (ch.Name.Equals(name))
+                    foreach (LiveChannel item in e.OldItems)
                     {
-                        // Match
-                        if (txt.Equals("Open"))
-                        {
-                            dataAquisition.SetChannelValue(ch, 0);
-                            (sender as System.Windows.Controls.Button).Content = "Closed";
-                        }
-                        else if (txt.Equals("Closed"))
-                        {
-                            dataAquisition.SetChannelValue(ch, 1);
-                            (sender as System.Windows.Controls.Button).Content = "Open";
-                        }
-                    }
+                        item.Channel.PropertyChanged -= NotifyUpdated;
+                    } 
                 }
+                RaiseUpdates();
+            };
+        }
+
+        private void NotifyUpdated(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == nameof(Channel.Name))
+            {
+                RaiseUpdates();
             }
         }
 
+        private void RaiseUpdates()
+        {
+            RaisePropertyChanged(Binding.IndexerName);
+            SendOutputValueCommand.RaiseCanExecuteChanged();
+        }
 
-        public InteractionRequest<FileInteractionNotification> OpenRequest { get; } = new InteractionRequest<FileInteractionNotification>();
-        
-
+        public LiveChannel this[string name] => Channels.FirstOrDefault(channel => channel.Channel.Name == name);
     }
 }

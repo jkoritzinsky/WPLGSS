@@ -44,26 +44,17 @@ namespace WPLGSS.Views
     [Export]
     public partial class SchematicView : UserControl
     {
-        public SchematicView(SchematicViewModel model)
+        public SchematicView()
         {
             InitializeComponent();
+        }
+
+        [ImportingConstructor]
+        public SchematicView(SchematicViewModel model)
+            :this()
+        {
 
             DataContext = model;
-
-            model.SetBindings(SchematicGrid.Children);
         }
-
-        private void ToggleOutput(object sender, RoutedEventArgs e)
-        {
-            ((SchematicViewModel)this.DataContext).ToggleOutput(sender, e);
-        }
-
-
-        //[ImportingConstructor]
-        //public SchematicView(SchematicViewModel model)
-        //    : this()
-        //{
-        //    DataContext = model;
-        //}
     }
 }
