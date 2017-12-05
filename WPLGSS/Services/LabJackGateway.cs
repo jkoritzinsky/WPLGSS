@@ -14,7 +14,7 @@ namespace WPLGSS.Services
     {
         int LJhandle = 0;
         String[] InputNames = new String[14];
-        String[] OutputNames = new String[2];
+        String[] OutputNames = new String[25];
 
         public LJM.LJMERROR LastError { get; private set; }
 
@@ -38,8 +38,31 @@ namespace WPLGSS.Services
             InputNames[12] = "AIN12";
             InputNames[13] = "AIN13";
 
-            OutputNames[0] = "DAC0";
-            OutputNames[1] = "DAC1";
+            OutputNames[0] = "DIO0";
+            OutputNames[1] = "DIO1";
+            OutputNames[2] = "DIO2";
+            OutputNames[3] = "DIO3";
+            OutputNames[4] = "DIO4";
+            OutputNames[5] = "DIO5";
+            OutputNames[6] = "DIO6";
+            OutputNames[7] = "DIO7";
+            OutputNames[8] = "DIO8";
+            OutputNames[9] = "DIO9";
+            OutputNames[10] = "DIO10";
+            OutputNames[11] = "DIO11";
+            OutputNames[12] = "DIO12";
+            OutputNames[13] = "DIO13";
+            OutputNames[14] = "DIO14";
+            OutputNames[15] = "DIO15";
+            OutputNames[16] = "DIO16";
+            OutputNames[17] = "DIO17";
+            OutputNames[18] = "DIO18";
+            OutputNames[19] = "DIO19";
+            OutputNames[20] = "DIO20";
+            OutputNames[21] = "DIO21";
+            OutputNames[22] = "DIO22";
+            OutputNames[23] = "DAC0";
+            OutputNames[24] = "DAC1";
         }
 
         public double[] GetAnalogData()
@@ -57,8 +80,17 @@ namespace WPLGSS.Services
         public void SetAnalogData(double[] Data)
         {
             int ErrorAddress = 0;
+            int numFrames;
 
-            LastError = LJM.eWriteNames(LJhandle, 2, OutputNames, Data, ref ErrorAddress);
+            if (Data.Length >= 25)
+            {
+                numFrames = 24;
+            } else
+            {
+                numFrames = Data.Length;
+            }
+
+            LastError = LJM.eWriteNames(LJhandle, numFrames, OutputNames, Data, ref ErrorAddress);
         }
     }
 }
