@@ -17,12 +17,13 @@ namespace WPLGSS.ViewModels
     [Export]
     public class LiveViewModel : BindableBase
     {
+        private readonly IConfigService configService;
         private readonly IDataAquisition dataAquisition;
         private readonly ISequenceEditorService fileEditorService;
         private readonly ISequencePersistence sequencePersistence;
 
         [ImportingConstructor]
-        public LiveViewModel(ISequenceRunner runner, ISequencePersistence sequencePersistence, ISequenceEditorService fileEditorService, IDataAquisition dataAquisition)
+        public LiveViewModel(ISequenceRunner runner, ISequencePersistence sequencePersistence, ISequenceEditorService fileEditorService, IDataAquisition dataAquisition, IConfigService configService = null)
         {
             this.sequencePersistence = sequencePersistence;
             this.fileEditorService = fileEditorService;
@@ -32,6 +33,7 @@ namespace WPLGSS.ViewModels
             StartStopRecCommand = new DelegateCommand(StartStopRecord);
             RunSequenceCommand = new DelegateCommand<Sequence>(runner.RunSequence);
             this.dataAquisition = dataAquisition;
+            this.configService = configService;
         }
 
         public string Name => "Live View";
@@ -90,8 +92,31 @@ namespace WPLGSS.ViewModels
                 if (n.Confirmed)
                 {
                     var sequence = sequencePersistence.OpenSequence(n.Path);
-                    var viewModel = new SequenceViewModel(sequence);
-                    fileEditorService.OpenSequenceInRegion(RegionNames.SequenceRunnerRegion, n.Path, viewModel);
+                    var missingChannels = configService == null ? new string[0] :
+                        sequence.PrimarySequence
+                            .Concat(sequence.AbortSequence)
+                            .Select(evt => evt.ChannelName)
+                            .Except(configService.Config.Channels.Select(channel => channel.Name));
+                    if (missingChannels.Any())
+                    {
+                        var builder = new StringBuilder();
+                        foreach (var channel in missingChannels)
+                        {
+                            builder.AppendLine(channel);
+                        }
+                        // Missing channel names
+                        UnableToOpenSequenceNotification.Raise(new Notification
+                        {
+                            Title = "Unable to Open Sequence",
+                            Content = "Cannot open a sequence for running that has channel names not in the current configuration.\n"
+                            + "Missing channels:\n" + builder.ToString()
+                        });
+                    }
+                    else
+                    {
+                        var viewModel = new SequenceViewModel(sequence);
+                        fileEditorService.OpenSequenceInRegion(RegionNames.SequenceRunnerRegion, n.Path, viewModel); 
+                    }
                 }
             });
         }
@@ -127,5 +152,6 @@ namespace WPLGSS.ViewModels
             DefaultExtension = ".seq.yaml"
         };
 
+        public InteractionRequest<Notification> UnableToOpenSequenceNotification { get; } = new InteractionRequest<Notification>();
     }
 }

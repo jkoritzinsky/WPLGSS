@@ -42,6 +42,9 @@
             <prism:InteractionRequestTrigger SourceObject="{Binding OpenRequest, Mode=OneWay}">
               <interactivity:OpenFileAction />
             </prism:InteractionRequestTrigger>
+            <prism:InteractionRequestTrigger SourceObject="{Binding UnableToOpenSequenceNotification}">
+              <prism:PopupWindowAction />
+            </prism:InteractionRequestTrigger>
           </i:Interaction.Triggers>
         </Button>
       </StackPanel>
