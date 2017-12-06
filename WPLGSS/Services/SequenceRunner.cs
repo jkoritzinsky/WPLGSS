@@ -12,21 +12,31 @@ using WPLGSS.Models;
 namespace WPLGSS.Services
 {
     [Export(typeof(ISequenceRunner))]
-    public class SequenceRunner: ISequenceRunner
+    public class SequenceRunner : ISequenceRunner, IDisposable
     {
         public event EventHandler<StatusChangedEventArgs> SequenceRunningStateChanged;
         private System.Timers.Timer timer;
+
         ObservableCollection<Event> primarySequence;
         ObservableCollection<Event> abortSequence;
-        ConcurrentDictionary<InputChannel, double> ChannelValues;
         public Queue<Event> cache;
+
         private WPLGSS.Models.AbortCondition AbortCondition;
-        
+        private IDataAquisition Service;
+        private Sequence sequence;
+        private TimeSpan sequenceStartTime;
+
+        public SequenceRunner(Sequence sequence, IDataAquisition dataService)
+        {
+            this.primarySequence = sequence.PrimarySequence;
+            this.abortSequence = sequence.AbortSequence;
+            this.Service = dataService;
+        }
 
         // Run the abort sequence
         public void OnThresholdReached(object source, System.Timers.ElapsedEventArgs e)
         {
-            foreach(Event curr in abortSequence)
+            foreach (Event curr in abortSequence)
             {
                 SequenceRunningStateChanged(this, new StatusChangedEventArgs());
                 cache.Enqueue(curr);
@@ -38,29 +48,62 @@ namespace WPLGSS.Services
         {
             foreach (Event curr in primarySequence)
             {
-                if (timer.Equals(curr.StartTime))
+                if ((curr.StartTime + sequenceStartTime).TotalMilliseconds - DateTime.Now.TimeOfDay.TotalMilliseconds < 1)
                 {
+                    Channel channel = null;
+                    switch(curr)
+                    {
+                        case OutputEvent output:
+                            Service.SetChannelValue(channel, 1);
+                            break;
+                        case AbortCondition abort:
+                            break;
+                    }
                     SequenceRunningStateChanged(this, new StatusChangedEventArgs());
                     cache.Enqueue(curr);
-                    if(AbortCondition.Equals(curr))
+                    if (AbortCondition.Equals(curr))
                     {
                         timer.Start();
                         timer.Elapsed += OnThresholdReached;
                         OnThresholdReached(this, e);
                     }
                 }
+
+                if ((curr.EndTime + sequenceStartTime).TotalMilliseconds - DateTime.Now.TimeOfDay.TotalMilliseconds < 1)
+                {
+                    Channel channel = null;
+                    switch (curr)
+                    {
+                        case OutputEvent output:
+                            Service.SetChannelValue(channel, 0);
+                            break;
+                        case AbortCondition abort:
+                            break;
+                    }
+                }
             }
         }
 
         // Raises Timed event every millisecond
-        public void RunSequence(Sequence sequence)
+        public void RunSequence()
         {
-            primarySequence = sequence.PrimarySequence;
-            abortSequence = sequence.AbortSequence;
             timer = new System.Timers.Timer();
             timer.Interval = 1;
-            timer.Elapsed += OnTimedEvent;       
+            timer.Elapsed += OnTimedEvent;
             timer.Enabled = true;
+            sequenceStartTime = DateTime.Now.TimeOfDay;
+            Service.ChannelValueUpdated += Service_ChannelValueUpdated;
+        }
+
+        private void Service_ChannelValueUpdated(object sender, ChannelValueUpdatedEventArgs e)
+        {
+            //Checking
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            ((IDisposable)timer).Dispose();
         }
     }
 }
