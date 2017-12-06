@@ -14,6 +14,8 @@ namespace WPLGSS.Services
     {
         void StartService();
 
+        void PauseService();
+
         void StartStopRecord(string path);
 
         void SetChannelValue(Channel channel, double value);
