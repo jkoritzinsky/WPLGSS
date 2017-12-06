@@ -133,7 +133,7 @@ namespace WPLGSS.Services
             SampleTimer.Elapsed += new System.Timers.ElapsedEventHandler(Sample);
             SampleTimer.Enabled = true;
 
-            dataOut = new double[2];
+            dataOut = new double[25];
 
             dataOut[0] = 0;
             dataOut[1] = 0;
@@ -141,8 +141,10 @@ namespace WPLGSS.Services
 
         public void SetChannelValue(Channel channel, double value)
         {
-            if (value == 0) dataOut[channel.ChannelId] = value;
-            if (value == 1) dataOut[channel.ChannelId] = value;
+            if (0 <= channel.ChannelId && channel.ChannelId <= dataOut.Length)
+            {
+                dataOut[channel.ChannelId] = value;
+            }
         }
 
         public void Dispose()

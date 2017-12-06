@@ -40,9 +40,9 @@
             <TextBlock Text="Input Channels" />
             <DataGrid ItemsSource="{Binding InputChannels}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Channel ID" Binding="{Binding ChannelId, Mode=TwoWay}" />
+                    <DataGridTextColumn Header="Channel ID" Binding="{Binding ChannelId, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}" />
                     <DataGridComboBoxColumn Header="Channel Source" SelectedValueBinding="{Binding Source, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource myEnum}}" />
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay, ValidatesOnDataErrors=True}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}" />
                     <DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay}" />
                     <DataGridTextColumn Header="Scaling Function" Binding="{Binding Scaling, Mode=TwoWay, ValidatesOnExceptions=True}" />
                     <DataGridTextColumn Header="Unit" Binding="{Binding Unit, Mode=TwoWay}" />
@@ -51,9 +51,9 @@
             <TextBlock Text="Output Channels" />
             <DataGrid ItemsSource="{Binding OutputChannels}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Channel ID" Binding="{Binding ChannelId, Mode=TwoWay}" />
+                    <DataGridTextColumn Header="Channel ID" Binding="{Binding ChannelId, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}" />
                     <DataGridComboBoxColumn Header="Channel Source" SelectedValueBinding="{Binding Source, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource myEnum}}" />
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay, ValidatesOnDataErrors=True}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay, ValidatesOnNotifyDataErrors=True}" />
                     <DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay}" />
                 </DataGrid.Columns>
             </DataGrid>

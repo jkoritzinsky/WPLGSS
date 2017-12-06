@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -104,5 +105,7 @@ namespace WPLGSS.ViewModels
                 Filter = obj => !(obj is InputChannel)
             };
         }
+
+        public bool IsValid => configService.Config.Channels.All(channel => !channel.HasErrors);
     }
 }

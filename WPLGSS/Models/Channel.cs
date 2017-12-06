@@ -1,5 +1,6 @@
 ﻿using Prism.Mvvm;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,8 +16,13 @@ namespace WPLGSS.Models
         LabJack
     }
 
-    public class Channel : BindableBase, IDataErrorInfo
+    public class Channel : BindableBase, INotifyDataErrorInfo
     {
+        public Channel()
+        {
+            Validate();
+        }
+
         private int channelId;
 
         public int ChannelId
@@ -24,7 +30,7 @@ namespace WPLGSS.Models
             get { return channelId; }
             set
             {
-                SetProperty(ref channelId, value);
+                SetProperty(ref channelId, value, Validate);
             }
         }
 
@@ -35,7 +41,7 @@ namespace WPLGSS.Models
             get { return source; }
             set
             {
-                SetProperty(ref source, value);
+                SetProperty(ref source, value, Validate);
             }
         }
 
@@ -46,11 +52,13 @@ namespace WPLGSS.Models
             get { return name; }
             set
             {
-                SetProperty(ref name, value);
+                SetProperty(ref name, value, Validate);
             }
         }
         
         private string description;
+
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
         public string Description
         {
@@ -60,23 +68,53 @@ namespace WPLGSS.Models
                 SetProperty(ref description, value);
             }
         }
+        [YamlIgnore]
+        public bool HasErrors => errors.Any();
 
         [YamlIgnore]
-        public string Error => null;
+        private readonly Dictionary<string, string> errors = new Dictionary<string, string>();
 
-        [YamlIgnore]
-        public string this[string columnName]
+        private void Validate()
         {
-            get
+            if (string.IsNullOrWhiteSpace(Name))
             {
-                if (columnName == nameof(Name))
+                errors[nameof(Name)] = "Channel name cannot be empty";
+            }
+            else
+            {
+                errors.Remove(nameof(Name));
+            }
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(Name)));
+
+            if (source == ChannelSource.LabJack)
+            {
+                var validChannel = true;
+                if (this is InputChannel)
                 {
-                    if (string.IsNullOrWhiteSpace(Name))
-                    {
-                        return "Channel name cannot be empty";
-                    }
+                    validChannel = ChannelId >= 0 && ChannelId <= 13;
                 }
-                return null;
+                else if (!(ChannelId >= 0 && ChannelId <= 24))
+                {
+                    validChannel = false;
+                }
+                if (!validChannel)
+                {
+                    errors[nameof(ChannelId)] = "Channel Id out of range";
+                }
+                else
+                {
+                    errors.Remove(nameof(ChannelId));
+                }
+            }
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(ChannelId)));
+
+        }
+
+        public IEnumerable GetErrors(string propertyName)
+        {
+            if (errors.TryGetValue(propertyName, out var error))
+            {
+                yield return error;
             }
         }
     }
