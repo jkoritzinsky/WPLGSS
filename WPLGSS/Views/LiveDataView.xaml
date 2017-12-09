@@ -53,31 +53,33 @@
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
+  <ScrollViewer>
     <ItemsControl ItemsSource="{Binding Channels}">
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock Text="{Binding Channel.Name}" />
-                    <ContentControl
-              Margin="5,0,0,0"
-              Content="{Binding}"
-              ContentTemplateSelector="{StaticResource Selector}"
-              MinWidth="115"
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <TextBlock Text="{Binding Channel.Name}" />
+            <ContentControl
+      Margin="5,0,0,0"
+      Content="{Binding}"
+      ContentTemplateSelector="{StaticResource Selector}"
+      MinWidth="115"
             />
-                </StackPanel>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-        <ItemsControl.ItemContainerStyle>
-            <Style>
-                <Setter Property="Control.Margin" Value="5"/>
-                <Style.Triggers>
-                    <Trigger Property="Control.IsMouseOver" Value="True">
-                        <Setter Property="Control.ToolTip"
-                    Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+          </StackPanel>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+      <ItemsControl.ItemContainerStyle>
+        <Style>
+          <Setter Property="Control.Margin" Value="5"/>
+          <Style.Triggers>
+            <Trigger Property="Control.IsMouseOver" Value="True">
+              <Setter Property="Control.ToolTip"
+          Value="{Binding RelativeSource={x:Static RelativeSource.Self},
                           Path=Content.Channel.Description}"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </ItemsControl.ItemContainerStyle>
+            </Trigger>
+          </Style.Triggers>
+        </Style>
+      </ItemsControl.ItemContainerStyle>
     </ItemsControl>
+  </ScrollViewer>
 </UserControl>

@@ -20,11 +20,13 @@ namespace WPLGSS.ViewModels
         private readonly IConfigService configService;
         private readonly IDataAquisition dataAquisition;
         private readonly ISequenceEditorService fileEditorService;
+        private readonly ISequenceRunner runner;
         private readonly ISequencePersistence sequencePersistence;
 
         [ImportingConstructor]
         public LiveViewModel(ISequenceRunner runner, ISequencePersistence sequencePersistence, ISequenceEditorService fileEditorService, IDataAquisition dataAquisition, IConfigService configService = null)
         {
+            this.runner = runner;
             this.sequencePersistence = sequencePersistence;
             this.fileEditorService = fileEditorService;
 
@@ -32,6 +34,7 @@ namespace WPLGSS.ViewModels
             StartServiceCommand = new DelegateCommand(StartService);
             StartStopRecCommand = new DelegateCommand(StartStopRecord);
             RunSequenceCommand = new DelegateCommand<Sequence>(runner.RunSequence);
+            PauseServiceCommand = new DelegateCommand(PauseService);
             this.dataAquisition = dataAquisition;
             this.configService = configService;
         }
@@ -39,6 +42,8 @@ namespace WPLGSS.ViewModels
         public string Name => "Live View";
 
         public ICommand StartServiceCommand { get; }
+
+        public ICommand PauseServiceCommand { get; }
 
         public ICommand RunSequenceCommand { get; }
 
@@ -66,23 +71,22 @@ namespace WPLGSS.ViewModels
                 SetProperty(ref currentSequence, value);
             }
         }
-
-        private bool started;
+        
         private void StartService()
         {
-            if (!started)
+            try
             {
-
-                try
-                {
-                    dataAquisition.StartService();
-                    started = true;
-                }
-                catch (Exception)
-                {
-                    // Failed To Start service. Will try again when re-loaded.
-                }
+                dataAquisition.StartService();
             }
+            catch (Exception)
+            {
+                // Failed To Start service. Will try again when re-loaded.
+            }
+        }
+
+        private void PauseService()
+        {
+            dataAquisition.PauseService();
         }
         
         private void OpenSequence()
