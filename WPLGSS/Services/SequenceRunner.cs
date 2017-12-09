@@ -19,54 +19,54 @@ namespace WPLGSS.Services
 
         ObservableCollection<Event> primarySequence;
         ObservableCollection<Event> abortSequence;
-        public Queue<Event> cache;
 
         private WPLGSS.Models.AbortCondition AbortCondition;
+        private Config config;
         private IDataAquisition Service;
         private Sequence sequence;
         private TimeSpan sequenceStartTime;
+        bool abortnow = false;
 
-        public SequenceRunner(Sequence sequence, IDataAquisition dataService)
+        public SequenceRunner(IDataAquisition dataService, Config config)
         {
-            this.primarySequence = sequence.PrimarySequence;
-            this.abortSequence = sequence.AbortSequence;
             this.Service = dataService;
-        }
-
-        // Run the abort sequence
-        public void OnThresholdReached(object source, System.Timers.ElapsedEventArgs e)
-        {
-            foreach (Event curr in abortSequence)
-            {
-                SequenceRunningStateChanged(this, new StatusChangedEventArgs());
-                cache.Enqueue(curr);
-            }
+            this.config = config;
         }
 
         // Raises StatusChangedEvent every millisecond and runs abort once abort condition met
         private void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
         {
+            ObservableCollection<Channel> Channels = config.Channels;
+            ObservableCollection<Event> currSequence;
+            if (abortnow == true) currSequence = abortSequence;
+            else currSequence = primarySequence;
+
             foreach (Event curr in primarySequence)
             {
                 if ((curr.StartTime + sequenceStartTime).TotalMilliseconds - DateTime.Now.TimeOfDay.TotalMilliseconds < 1)
                 {
+                    String channelName = curr.ChannelName;
                     Channel channel = null;
+                    foreach(Channel chan in Channels)
+                    {
+                        if (chan.Name.Equals(channelName))
+                        {
+                            channel = chan;
+                            break;
+                        }
+                            
+                    }
                     switch(curr)
                     {
                         case OutputEvent output:
                             Service.SetChannelValue(channel, 1);
                             break;
                         case AbortCondition abort:
+                            timer.Start();      // Restart Timer ?
+                            abortnow = true;
                             break;
                     }
-                    SequenceRunningStateChanged(this, new StatusChangedEventArgs());
-                    cache.Enqueue(curr);
-                    if (AbortCondition.Equals(curr))
-                    {
-                        timer.Start();
-                        timer.Elapsed += OnThresholdReached;
-                        OnThresholdReached(this, e);
-                    }
+     
                 }
 
                 if ((curr.EndTime + sequenceStartTime).TotalMilliseconds - DateTime.Now.TimeOfDay.TotalMilliseconds < 1)
@@ -78,6 +78,7 @@ namespace WPLGSS.Services
                             Service.SetChannelValue(channel, 0);
                             break;
                         case AbortCondition abort:
+                            abortnow = false;
                             break;
                     }
                 }
@@ -85,8 +86,11 @@ namespace WPLGSS.Services
         }
 
         // Raises Timed event every millisecond
-        public void RunSequence()
+        public void RunSequence(Sequence sequence)
         {
+            this.primarySequence = sequence.PrimarySequence;
+            this.abortSequence = sequence.AbortSequence;
+            SequenceRunningStateChanged(this, new StatusChangedEventArgs());
             timer = new System.Timers.Timer();
             timer.Interval = 1;
             timer.Elapsed += OnTimedEvent;
@@ -97,8 +101,13 @@ namespace WPLGSS.Services
 
         private void Service_ChannelValueUpdated(object sender, ChannelValueUpdatedEventArgs e)
         {
-            //Checking
-            throw new NotImplementedException();
+            
+            if(AbortCondition.ThresholdMax <= e.Value || AbortCondition.ThresholdMin >= e.Value)
+            {
+                abortnow = true;
+                sequenceStartTime = e.Time.TimeOfDay;
+                // Run OnTimedEvent
+            }
         }
 
         public void Dispose()
