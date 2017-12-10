@@ -34,11 +34,13 @@ namespace WPLGSS.Services
         public DataService(IConfigService config, ILabJackGateway lj)
         {
             this.config = config;
+
             dataOut = new double[25];
             for (int i=0; i<25; i++)
             {
                 dataOut[i] = 0;
             }
+
             LJ = lj;
         }
 
@@ -134,12 +136,20 @@ namespace WPLGSS.Services
         {
             LJ.OpenLabJack();
 
-            SampleTimer = new System.Timers.Timer(10);
-            SampleTimer.Elapsed += new System.Timers.ElapsedEventHandler(Sample);
+            if (SampleTimer == null)
+            {
+                SampleTimer = new System.Timers.Timer(10);
+                SampleTimer.Elapsed += new System.Timers.ElapsedEventHandler(Sample); 
+            }
             SampleTimer.Enabled = true;
+        }
 
-            dataOut[0] = 0;
-            dataOut[1] = 0;
+        public void PauseService()
+        {
+            if (SampleTimer != null)
+            {
+                SampleTimer.Enabled = false; 
+            }
         }
 
         public void SetChannelValue(Channel channel, double value)

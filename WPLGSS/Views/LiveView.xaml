@@ -14,6 +14,9 @@
     <i:EventTrigger EventName="Loaded">
       <i:InvokeCommandAction Command="{Binding StartServiceCommand}" />
     </i:EventTrigger>
+    <i:EventTrigger EventName="Unloaded">
+      <i:InvokeCommandAction Command="{Binding PauseServiceCommand}" />
+    </i:EventTrigger>
   </i:Interaction.Triggers>
   <UserControl.Resources>
     <Style TargetType="{x:Type TabItem}" x:Key="SequenceViewerRegionStyle">

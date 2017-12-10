@@ -12,6 +12,7 @@ namespace WPLGSS.Services
     [Export(typeof(ILabJackGateway))]
     public class LabJackGateway : ILabJackGateway
     {
+        bool opened;
         int LJhandle = 0;
         String[] InputNames = new String[14];
         String[] OutputNames = new String[25];
@@ -20,6 +21,10 @@ namespace WPLGSS.Services
 
         public void OpenLabJack()
         {
+            if (opened)
+            {
+                return;
+            }
 
             LastError = LJM.OpenS("ANY", "ANY", "ANY", ref LJhandle);
 
@@ -63,6 +68,8 @@ namespace WPLGSS.Services
             OutputNames[22] = "DIO22";
             OutputNames[23] = "DAC0";
             OutputNames[24] = "DAC1";
+
+            opened = true;
         }
 
         public double[] GetAnalogData()
