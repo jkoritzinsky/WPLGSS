@@ -115,7 +115,7 @@ namespace WPLGSS.ViewModels
                     if (series.Points.Count >= NumPoints)
                         series.Points.RemoveAt(0);
                     series.Points.Add(DateTimeAxis.CreateDataPoint(time, value));
-                    series.PlotModel.InvalidatePlot(true);
+                    series.PlotModel?.InvalidatePlot(true);
                 });
             }
         }
