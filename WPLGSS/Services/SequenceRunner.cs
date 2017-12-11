@@ -20,10 +20,9 @@ namespace WPLGSS.Services
         ObservableCollection<Event> primarySequence;
         ObservableCollection<Event> abortSequence;
 
-        private WPLGSS.Models.AbortCondition AbortCondition;
+        public List<AbortCondition> abortConditions;
         private Config config;
         private IDataAquisition Service;
-        private Sequence sequence;
         private TimeSpan sequenceStartTime;
         bool abortnow = false;
 
@@ -62,8 +61,9 @@ namespace WPLGSS.Services
                             Service.SetChannelValue(channel, 1);
                             break;
                         case AbortCondition abort:
-                            timer.Start();      // Restart Timer ?
+                            sequenceStartTime = DateTime.Now.TimeOfDay;    
                             abortnow = true;
+                            abortConditions.Add(abort);
                             break;
                     }
      
@@ -79,6 +79,7 @@ namespace WPLGSS.Services
                             break;
                         case AbortCondition abort:
                             abortnow = false;
+                            abortConditions.Remove(abort);
                             break;
                     }
                 }
@@ -101,18 +102,22 @@ namespace WPLGSS.Services
 
         private void Service_ChannelValueUpdated(object sender, ChannelValueUpdatedEventArgs e)
         {
-            
-            if(AbortCondition.ThresholdMax <= e.Value || AbortCondition.ThresholdMin >= e.Value)
+            foreach (AbortCondition curr in abortConditions)
             {
-                abortnow = true;
-                sequenceStartTime = e.Time.TimeOfDay;
-                // Run OnTimedEvent
+                if (e.Channel.Name.Equals(curr.ChannelName))
+                {
+                    if (curr.ThresholdMax <= e.Value || curr.ThresholdMin >= e.Value)
+                    {
+                        abortnow = true;
+                        sequenceStartTime = e.Time.TimeOfDay;
+                    }
+                }
             }
         }
 
         public void Dispose()
         {
-            ((IDisposable)timer).Dispose();
+            timer.Dispose();
         }
     }
 }
