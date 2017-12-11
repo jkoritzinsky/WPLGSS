@@ -21,21 +21,21 @@ namespace WPLGSS.Services
         ObservableCollection<Event> abortSequence;
 
         public List<AbortCondition> abortConditions;
-        private Config config;
+        private IConfigService config;
         private IDataAquisition Service;
         private TimeSpan sequenceStartTime;
         bool abortnow = false;
 
-        public SequenceRunner(IDataAquisition dataService, Config config)
+        public SequenceRunner(IDataAquisition dataService, IConfigService configService)
         {
             this.Service = dataService;
-            this.config = config;
+            this.config = configService;
         }
 
         // Raises StatusChangedEvent every millisecond and runs abort once abort condition met
         private void OnTimedEvent(object source, System.Timers.ElapsedEventArgs e)
         {
-            ObservableCollection<Channel> Channels = config.Channels;
+            ObservableCollection<Channel> Channels = config.Config.Channels;
             ObservableCollection<Event> currSequence;
             if (abortnow == true) currSequence = abortSequence;
             else currSequence = primarySequence;
@@ -44,7 +44,7 @@ namespace WPLGSS.Services
             {
                 if ((curr.StartTime + sequenceStartTime).TotalMilliseconds - DateTime.Now.TimeOfDay.TotalMilliseconds < 1)
                 {
-                    String channelName = curr.ChannelName;
+                    var channelName = curr.ChannelName;
                     Channel channel = null;
                     foreach(Channel chan in Channels)
                     {
@@ -54,6 +54,10 @@ namespace WPLGSS.Services
                             break;
                         }
                             
+                    }
+                    if (channel == null)
+                    {
+                        continue;
                     }
                     switch(curr)
                     {
@@ -71,7 +75,21 @@ namespace WPLGSS.Services
 
                 if ((curr.EndTime + sequenceStartTime).TotalMilliseconds - DateTime.Now.TimeOfDay.TotalMilliseconds < 1)
                 {
+                    var channelName = curr.ChannelName;
                     Channel channel = null;
+                    foreach (Channel chan in Channels)
+                    {
+                        if (chan.Name.Equals(channelName))
+                        {
+                            channel = chan;
+                            break;
+                        }
+
+                    }
+                    if (channel == null)
+                    {
+                        continue;
+                    }
                     switch (curr)
                     {
                         case OutputEvent output:
@@ -91,7 +109,7 @@ namespace WPLGSS.Services
         {
             this.primarySequence = sequence.PrimarySequence;
             this.abortSequence = sequence.AbortSequence;
-            SequenceRunningStateChanged(this, new StatusChangedEventArgs());
+            SequenceRunningStateChanged?.Invoke(this, new StatusChangedEventArgs());
             timer = new System.Timers.Timer();
             timer.Interval = 1;
             timer.Elapsed += OnTimedEvent;

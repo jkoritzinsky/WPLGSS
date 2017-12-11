@@ -21,22 +21,39 @@ namespace WPLGSS.Services.UnitTests
         [Fact]
         public async Task SampleWillRunService()
         {
-            var sequence = A.Fake<Sequence>();
+            var sequence = new Sequence
+            {
+                PrimarySequence =
+                {
+                    new OutputEvent
+                    {
+                        StartTime = TimeSpan.FromMilliseconds(0),
+                        EndTime = TimeSpan.FromMilliseconds(10),
+                        ChannelName = "Output"
+                    }
+                }
+            };
             
             var service = A.Fake<IDataAquisition>();
 
-            var config = A.Fake<Config>();
-            var called = false;
+            var config = A.Fake<IConfigService>();
+            A.CallTo(() => config.Config).Returns(new Config
+            {
+                Channels =
+                {
+                    new Channel
+                    {
+                        Name = "Output"
+                    }
+                }
+            });
+
             using (var runSequence = new SequenceRunner(service, config))
             {
                 runSequence.RunSequence(sequence);
-                service.ChannelValueUpdated += (s, e) =>
-                {
-                    called = true;
-                };
                 await Task.Delay(15);
             }
-            Assert.True(called);
+            A.CallTo(() => service.SetChannelValue(A<Channel>.Ignored, A<double>.Ignored)).MustHaveHappened(Repeated.AtLeast.Twice);
         }
 
         // Also need to test for abort conditions
