@@ -7,25 +7,27 @@
              mc:Ignorable="d" 
 
              x:Name="LiveData">
-
+  <UserControl.Resources>
+        <local:OutputConverter x:Key="OutputConverter" />
+  </UserControl.Resources>
     <Viewbox>
         <Grid Name="SchematicGrid">
             <Image Source="WPL_PID.png" Panel.ZIndex="1" />
 
-            <Button CommandParameter="{Binding Path=[4-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1118,646,1145.2,768.4" />
-            <Button CommandParameter="{Binding Path=[4-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1718,645,545.2,769.4" />
-            <Button CommandParameter="{Binding Path=[5-PV-3]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1556,496,707.2,918.4" />
-            <Button CommandParameter="{Binding Path=[5-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1339,499,924.2,915.4"  />
-            <Button CommandParameter="{Binding Path=[5-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1073,384,1190.2,1030.4"/>
-            <Button CommandParameter="{Binding Path=[1-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="649,243,1614.2,1171.4" />
-            <Button CommandParameter="{Binding Path=[1-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1556,136,707.2,1278.4" />
-            <Button CommandParameter="{Binding Path=[2-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1113,1017,1150.2,397.4" />
-            <Button CommandParameter="{Binding Path=[2-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1728,1018,535.2,396.4" />
-            <Button CommandParameter="{Binding Path=[3-PV-3]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1550,1181,713.2,233.4" />
-            <Button CommandParameter="{Binding Path=[3-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1367,1180,896.2,234.4" />
-            <Button CommandParameter="{Binding Path=[1-PV-4]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}"  Margin="1580,1416,683.2,-1.6" />
-            <Button CommandParameter="{Binding Path=[3-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="973,1274,1290.2,140.4" />
-            <Button CommandParameter="{Binding Path=[1-PV-3]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="649,719,1614.2,695.4" />
+            <ToggleButton IsChecked="{Binding Path=CommandParameter.Value, RelativeSource={RelativeSource Self}, Converter={StaticResource OutputConverter}}" CommandParameter="{Binding Path=[4-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1118,646,1145.2,768.4" />
+            <ToggleButton IsChecked="{Binding Path=CommandParameter.Value, RelativeSource={RelativeSource Self}, Converter={StaticResource OutputConverter}}" CommandParameter="{Binding Path=[4-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1718,645,545.2,769.4" />
+            <ToggleButton IsChecked="{Binding Path=CommandParameter.Value, RelativeSource={RelativeSource Self}, Converter={StaticResource OutputConverter}}" CommandParameter="{Binding Path=[5-PV-3]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1556,496,707.2,918.4" />
+            <ToggleButton IsChecked="{Binding Path=CommandParameter.Value, RelativeSource={RelativeSource Self}, Converter={StaticResource OutputConverter}}" CommandParameter="{Binding Path=[5-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1339,499,924.2,915.4"  />
+            <ToggleButton IsChecked="{Binding Path=CommandParameter.Value, RelativeSource={RelativeSource Self}, Converter={StaticResource OutputConverter}}" CommandParameter="{Binding Path=[5-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1073,384,1190.2,1030.4"/>
+            <ToggleButton IsChecked="{Binding Path=CommandParameter.Value, RelativeSource={RelativeSource Self}, Converter={StaticResource OutputConverter}}" CommandParameter="{Binding Path=[1-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="649,243,1614.2,1171.4" />
+            <ToggleButton IsChecked="{Binding Path=CommandParameter.Value, RelativeSource={RelativeSource Self}, Converter={StaticResource OutputConverter}}" CommandParameter="{Binding Path=[1-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1556,136,707.2,1278.4" />
+            <ToggleButton IsChecked="{Binding Path=CommandParameter.Value, RelativeSource={RelativeSource Self}, Converter={StaticResource OutputConverter}}" CommandParameter="{Binding Path=[2-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1113,1017,1150.2,397.4" />
+            <ToggleButton IsChecked="{Binding Path=CommandParameter.Value, RelativeSource={RelativeSource Self}, Converter={StaticResource OutputConverter}}" CommandParameter="{Binding Path=[2-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1728,1018,535.2,396.4" />
+            <ToggleButton IsChecked="{Binding Path=CommandParameter.Value, RelativeSource={RelativeSource Self}, Converter={StaticResource OutputConverter}}" CommandParameter="{Binding Path=[3-PV-3]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1550,1181,713.2,233.4" />
+            <ToggleButton IsChecked="{Binding Path=CommandParameter.Value, RelativeSource={RelativeSource Self}, Converter={StaticResource OutputConverter}}" CommandParameter="{Binding Path=[3-PV-2]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="1367,1180,896.2,234.4" />
+            <ToggleButton IsChecked="{Binding Path=CommandParameter.Value, RelativeSource={RelativeSource Self}, Converter={StaticResource OutputConverter}}" CommandParameter="{Binding Path=[1-PV-4]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}"  Margin="1580,1416,683.2,-1.6" />
+            <ToggleButton IsChecked="{Binding Path=CommandParameter.Value, RelativeSource={RelativeSource Self}, Converter={StaticResource OutputConverter}}" CommandParameter="{Binding Path=[3-PV-1]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="973,1274,1290.2,140.4" />
+            <ToggleButton IsChecked="{Binding Path=CommandParameter.Value, RelativeSource={RelativeSource Self}, Converter={StaticResource OutputConverter}}" CommandParameter="{Binding Path=[1-PV-3]}" Width="40" Height="20" Content="Open" Panel.ZIndex="2" Command="{Binding SendOutputValueCommand}" Margin="649,719,1614.2,695.4" />
             <TextBlock FontSize="15"  Height="20" Text="{Binding Path=[PT-10].Channel.Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1642,619,621.2,795.4" />
             <TextBlock FontSize="15"  Height="20" Text="{Binding Path=[TT-07].Channel.Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1474,993,789.2,421.4" />
             <TextBlock FontSize="15"  Height="20" Text="{Binding Path=[PT-09].Channel.Value, StringFormat={}{0:0.##}°K}" Panel.ZIndex="2" Margin="1655,993,608.2,421.4" />

@@ -44,6 +44,18 @@ namespace WPLGSS.Services
             LJ = lj;
         }
 
+        private void RunOnMainThread(SendOrPostCallback callback)
+        {
+            if (SynchronizationContext.Current != null)
+            {
+                SynchronizationContext.Current.Post(callback, null);
+            }
+            else
+            {
+                callback(null);
+            }
+        }
+
         private void Sample(object source, System.Timers.ElapsedEventArgs e)
         {
             LJ.SetAnalogData(dataOut);
@@ -53,7 +65,8 @@ namespace WPLGSS.Services
 
             if (LJ.LastError == LabJack.LJM.LJMERROR.NOERROR)
             {
-                SendOrPostCallback eventCallback = _ => {
+                RunOnMainThread(_ =>
+                {
                     ChannelValues.Clear();
                     foreach (var chan in config.Config.Channels)
                     {
@@ -63,7 +76,8 @@ namespace WPLGSS.Services
                             if (input.ScalingFunction != null)
                             {
                                 value = input.ScalingFunction(dataIn[input.ChannelId]);
-                            } else
+                            }
+                            else
                             {
                                 value = dataIn[input.ChannelId];
                             }
@@ -81,16 +95,7 @@ namespace WPLGSS.Services
                             );
                         }
                     }
-                };
-
-                if (SynchronizationContext.Current != null)
-                {
-                    SynchronizationContext.Current.Post(eventCallback, null); 
-                }
-                else
-                {
-                    eventCallback(null);
-                }
+                });
             }
 
             if (recording)
@@ -158,6 +163,8 @@ namespace WPLGSS.Services
             {
                 dataOut[channel.ChannelId] = value;
             }
+
+            RunOnMainThread(_ => ChannelValueUpdated?.Invoke(this, new ChannelValueUpdatedEventArgs(channel, value, DateTime.Now)));
         }
 
         public void Dispose()
