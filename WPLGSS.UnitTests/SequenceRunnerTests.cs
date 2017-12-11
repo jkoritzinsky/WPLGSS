@@ -22,19 +22,20 @@ namespace WPLGSS.Services.UnitTests
         public async Task SampleWillRunService()
         {
             var sequence = A.Fake<Sequence>();
-            var LabJack = A.Fake<ILabJackGateway>();
-            var configService = A.Fake<IConfigService>();
-            var config = A.Fake<Config>();
-            var service = new DataService(configService, LabJack);
-            var called = false;
+            
+            var service = A.Fake<IDataAquisition>();
 
-            A.CallTo(() => configService.Config).Returns(config);
+            var config = A.Fake<Config>();
+            var called = false;
             using (var runSequence = new SequenceRunner(service, config))
             {
                 runSequence.RunSequence(sequence);
+                service.ChannelValueUpdated += (s, e) =>
+                {
+                    called = true;
+                };
                 await Task.Delay(15);
             }
-            // How do I verify that the data acquisition service gets called?
             Assert.True(called);
         }
 
