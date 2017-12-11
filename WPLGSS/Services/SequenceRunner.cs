@@ -26,6 +26,7 @@ namespace WPLGSS.Services
         private TimeSpan sequenceStartTime;
         bool abortnow = false;
 
+        [ImportingConstructor]
         public SequenceRunner(IDataAquisition dataService, IConfigService configService)
         {
             this.Service = dataService;
