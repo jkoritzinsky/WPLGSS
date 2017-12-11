@@ -58,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SequenceEditorServiceTests.cs" />
     <Compile Include="SequenceManagerViewModelTests.cs" />
+    <Compile Include="SequenceRunnerTests.cs" />
     <Compile Include="SequenceViewModelTests.cs" />
     <Compile Include="SubsequenceViewModelTests.cs" />
     <Compile Include="TypeTextReader.cs" />
